@@ -1,21 +1,21 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  *
  * @author wanes
  */
 @Entity
+@Table(name = "produto")
 public class Produto implements Serializable {
     
     @Id
@@ -36,20 +36,31 @@ public class Produto implements Serializable {
     
     @Column (name="categoria", nullable = false)   
     private String categoria;
+    
+    @Column (name="estoque", nullable = false)
+    private double estoque;
+    
+    @OneToMany(mappedBy = "produto")
+    private List<Item_Venda> item_venda;
 
     public Produto() {
     }
+    
+    
 
     public Produto(String nome, 
             double valor, 
             double tam_pes, 
             String unidMedida, 
-            String categoria){
+            String categoria, 
+            double estoque){
+        
         this.nome = nome;
         this.valor = valor;
         this.tam_pes = tam_pes;
         this.unidMedida = unidMedida;
         this.categoria = categoria;
+        this.estoque = this.estoque;
     }
 
     public int getIdProduto() {
@@ -98,5 +109,31 @@ public class Produto implements Serializable {
 
     public void setCategoria(String categoria) {
         this.categoria = categoria;
+    }
+
+    public double getEstoque() {
+        return estoque;
+    }
+
+    public void setEstoque(double estoque) {
+        this.estoque = estoque;
+    }
+
+    public Item_Venda getItem_venda() {
+        return (Item_Venda) item_venda;
+    }
+
+    public void setItem_venda(Item_Venda item_venda) {
+        this.item_venda = (List<Item_Venda>) item_venda;
+    }
+    
+    public int getQuantidadeTotalVendida() {
+        int quantidadeTotal = 0;
+        if (item_venda != null) {
+            for (Item_Venda item : item_venda) {
+                quantidadeTotal += item.getQtProduto();
+            }
+        }
+        return quantidadeTotal;
     }
 }

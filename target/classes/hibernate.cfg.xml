@@ -6,7 +6,7 @@
   <session-factory>
     <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
     <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-    <property name="hibernate.connection.url">jdbc:postgresql://127.0.0.1:5432/cafeteria_controleestoque</property>
+    <property name="hibernate.connection.url">jdbc:postgresql://127.0.0.1:5432/cafeteriacontroleestoque</property>
     <property name="hibernate.connection.username">postgres</property>
     <property name="hibernate.connection.password">1234</property>
     
@@ -19,14 +19,9 @@
     <property name="hibernate.use_sql_comments">true</property>
     
     <mapping class="model.Cliente"></mapping>
-    <mapping class="model.Fornecedor"></mapping>
     <mapping class="model.Produto"></mapping>
     <mapping class="model.Venda"></mapping>
-    <mapping class="model.Pessoa"></mapping>
-    <mapping class="model.Item_ProdutoPK"></mapping>
-    <mapping class="model.Item_VendaPK"></mapping>
-    <mapping class="model.FormaPagamento"></mapping>
-    <mapping class="model.Endereco"></mapping>
+    <mapping class="model.Item_Venda"></mapping>
     
   </session-factory>
 </hibernate-configuration>

@@ -1,16 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package control;
 
 import dao.ConexaoHibernate;
 import dao.GenericDAO;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 import model.Cliente;
-import model.Fornecedor;
+import model.Item_Venda;
 import model.Produto;
 import model.Venda;
 
@@ -31,25 +26,19 @@ public class GerenciadorDeDominio {
         }
     }
     
-    /* CLIENTE */
-    public List<Object> listarClientes(){
-        return genDAO.listar(Cliente.class);
+    public List listar(Class classe) throws ClassNotFoundException, SQLException {
+        return genDAO.listar(classe );
     }
     
+    
+    /* CLIENTE */
+    
     public Cliente inserirCliente(
-            String cpf,
-            String nome, 
-            String email, 
-            String celular, 
-            String cep,
-            String bairro,
-            int numero,
-            String complemento,
-            String rua,
-            String cidade, 
-            String estado){
+            String nome,
+            String cpf, 
+            String tel){
         
-        Cliente cliente = new Cliente(cpf, nome, email, celular, cep, bairro, numero, complemento, rua, cidade, estado);
+        Cliente cliente = new Cliente(nome, cpf, tel);
         genDAO.inserir(cliente);
         return cliente;
     }
@@ -57,71 +46,50 @@ public class GerenciadorDeDominio {
     public List<Object> pesquisarCliente(String pesq)throws SQLException, ClassNotFoundException{
         return genDAO.listar(Cliente.class);        
     }
-    
-    /* FORNECEDOR */
-    public List<Object> listarFornecedores(){
-        return genDAO.listar(Fornecedor.class);
-    }
-    
-    public Fornecedor inserirFornecedor(
-            String cnpj,
-            String nome, 
-            String email, 
-            String celular, 
-            String cep,
-            String bairro,
-            int numero,
-            String complemento,
-            String rua,
-            String cidade, 
-            String estado){
-        
-        Fornecedor fornecedor = new Fornecedor(cnpj, nome, email, celular, cep, bairro, numero, complemento, rua, cidade, estado);
-        genDAO.inserir(fornecedor);
-        return fornecedor;
-    }
-    
-    public List<Object> pesquisarFornecedor(String pesq)throws SQLException, ClassNotFoundException{
-        return genDAO.listar(Fornecedor.class);        
-    }
+   
     
     /* PRODUTO*/
-    public List<Object> listarProdutos(){
-        return genDAO.listar(Produto.class);
-    }
     
-    public int inserirProduto(
+    public Produto inserirProduto(
             String nome, 
             double valor, 
             double tam_pes, 
             String unidMedida, 
-            String categoria){
+            String categoria,
+            double estoque){
         
-        Produto produto = new Produto(nome, valor, tam_pes, unidMedida, categoria);
+        Produto produto = new Produto(nome, valor, tam_pes, unidMedida, categoria, estoque);
         genDAO.inserir(produto);
-        return produto.getIdProduto();
+        return produto;
     }
     
     public List<Object> pesquisarProduto(String pesq)throws SQLException, ClassNotFoundException{
         return genDAO.listar(Produto.class);        
     }
     
-    /* VENDA */
-    public List<Object> listarVendas(){
-        return genDAO.listar(Fornecedor.class);
-    }   
+    /* VENDA */  
     
     public Venda inserirVendas(
-            Date dataVenda, 
             double totalVenda, 
-            Date hora){
+            Cliente cliente){
         
-        Venda venda = new Venda(dataVenda, totalVenda, hora);
+        Venda venda = new Venda(totalVenda, cliente);
         genDAO.inserir(venda);
         return venda;
     }
     
     public List<Object> pesquisarVenda(String pesq)throws SQLException, ClassNotFoundException{
         return genDAO.listar(Venda.class);        
+    }
+    
+    /* ITEM VENDA */
+    public Item_Venda inserirItemVenda(Produto produto, Venda venda, int quantidade, double preco, double desconto) {
+        Item_Venda itemVenda = new Item_Venda(quantidade, produto, venda, quantidade, desconto);
+        genDAO.inserir(itemVenda);
+        return itemVenda;
+    }
+    
+    public List<Object> pesquisarItemVenda(String pesq) throws SQLException, ClassNotFoundException {
+        return genDAO.listar(Item_Venda.class);        
     }
 }

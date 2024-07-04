@@ -1,37 +1,64 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 import java.io.Serializable;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  *
  * @author wanes
  */
 @Entity
-@DiscriminatorValue("2")
-public class Cliente extends Pessoa implements Serializable{
+@Table(name = "cliente")
+public class Cliente implements Serializable{
     
-    @Column (unique = true, length = 14)
+    @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    private int idCliente;
+    
+    @Column (name="nomeCliente", nullable = false)    
+    private String nome;
+    
+    @Column (name= "cpf", unique = true, length = 15)
     private String cpf;
     
-    @ManyToOne
-    @JoinColumn(name="idVenda")
-    private Venda venda;
+    @Column (name= "tel", unique = true, length = 15)
+    private String tel;
+
+    public Cliente(int idCliente, String nome, String cpf, String tel) {
+        this.idCliente = idCliente;
+        this.nome = nome;
+        this.cpf = cpf;
+        this.tel = tel;
+    }
 
     public Cliente() {
     }
-    
-    public Cliente(String cpf, String nome, String email, String celular, String cep, String bairro, int numero, String complemento, String rua, String cidade, String estado) {
-        super(nome, email, celular, cep, bairro, numero, complemento, rua, cidade, estado);
+
+    public Cliente(String nome, String cpf, String tel) {
+        this.nome = nome;
         this.cpf = cpf;
+        this.tel = tel;
+    }
+
+    public int getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(int idCliente) {
+        this.idCliente = idCliente;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public String getCpf() {
@@ -40,5 +67,13 @@ public class Cliente extends Pessoa implements Serializable{
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
     }
 }

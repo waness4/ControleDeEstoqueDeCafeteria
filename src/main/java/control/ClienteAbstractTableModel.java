@@ -1,13 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package control;
 
 import java.util.ArrayList;
 import java.util.List;
 import model.Cliente;
-
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -25,12 +20,12 @@ public class ClienteAbstractTableModel extends AbstractTableModel{
 
     @Override
     public int getColumnCount() {
-        return 7;
+        return 4;
     }
     
     @Override
     public String getColumnName(int column) {
-        String nomesColunas[] = {"Id", "Nome", "E-mail", "CPF", "Celular", "Cidade", "Estado"};        
+        String nomesColunas[] = {"Id", "Nome", "CPF", "Telefone"};        
         return nomesColunas[column];        
     }
     
@@ -38,13 +33,10 @@ public class ClienteAbstractTableModel extends AbstractTableModel{
     public Object getValueAt(int rowIndex, int columnIndex) {
         Cliente cliente = listaClientes.get(rowIndex);
         return switch (columnIndex) {
-            case 0 -> cliente.getIdPessoa();
+            case 0 -> cliente.getIdCliente();
             case 1 -> cliente.getNome();
-            case 2 -> cliente.getEmail();
-            case 3 -> cliente.getCpf();
-            case 4 -> cliente.getCelular();
-            case 5 -> cliente.getEndereco().getCidade();
-            case 6 -> cliente.getEndereco().getEstado();
+            case 2 -> cliente.getCpf();
+            case 3 -> cliente.getTel();
             default -> null;
         };
     }

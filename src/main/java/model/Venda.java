@@ -1,11 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,22 +10,20 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  *
  * @author wanes
  */
 @Entity
+@Table(name = "venda")
 public class Venda implements Serializable {
     
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int idVenda;
-    
-    @Temporal(TemporalType.DATE)
-    private Date dataVenda;
     
     @Column (name="totalVenda", nullable = false)
     private double totalVenda;
@@ -36,27 +31,17 @@ public class Venda implements Serializable {
     @ManyToOne
     @JoinColumn(name="idCliente")
     private Cliente cliente;
-    
-    @ManyToOne
-    @JoinColumn(name="idItemVenda")
-    private Item_VendaPK itemVenda;
-    
-    @ManyToOne
-    @JoinColumn(name="idFormaPagamento")
-    private FormaPagamento formaPagameto;
-    
-    @Temporal(TemporalType.TIME)
-    private Date hora;
+        
+    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL)
+    private List<Item_Venda> item_venda;
 
     public Venda() {
     }
 
-    public Venda(Date dataVenda, 
-            double totalVenda, 
-            Date hora) {
-        this.dataVenda = dataVenda;
+    public Venda(
+            double totalVenda, Cliente cliente) {
         this.totalVenda = totalVenda;
-        this.hora = hora;
+        this.cliente = cliente;
     }
 
     public int getIdVenda() {
@@ -67,14 +52,6 @@ public class Venda implements Serializable {
         this.idVenda = idVenda;
     }
 
-    public Date getDataVenda() {
-        return dataVenda;
-    }
-
-    public void setDataVenda(Date dataVenda) {
-        this.dataVenda = dataVenda;
-    }
-
     public double getTotalVenda() {
         return totalVenda;
     }
@@ -83,13 +60,19 @@ public class Venda implements Serializable {
         this.totalVenda = totalVenda;
     }
 
-    public Date getHora() {
-        return hora;
+    public Cliente getCliente() {
+        return cliente;
     }
 
-    public void setHora(Date hora) {
-        this.hora = hora;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
-    
-    
+
+    public Item_Venda getItemVenda() {
+        return (Item_Venda) item_venda;
+    }
+
+    public void setItemVenda(Item_Venda itemVenda) {
+        this.item_venda = item_venda;
+    }    
 }
