@@ -40,7 +40,7 @@ public class Dlg_Listar_Produtos extends javax.swing.JDialog {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        btVoltarConsultarCliente = new javax.swing.JButton();
+        btVoltarListarProduto = new javax.swing.JButton();
         fieldDescricaoConsultarCliente = new javax.swing.JTextField();
         btPesquisarConsultarCliente = new javax.swing.JButton();
         scrolConsultarCliente = new javax.swing.JScrollPane();
@@ -55,17 +55,17 @@ public class Dlg_Listar_Produtos extends javax.swing.JDialog {
         jLabel1.setText("LISTA PRODUTOS");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 30, -1, -1));
 
-        btVoltarConsultarCliente.setText("Voltar");
-        btVoltarConsultarCliente.addActionListener(new java.awt.event.ActionListener() {
+        btVoltarListarProduto.setText("Voltar");
+        btVoltarListarProduto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btVoltarConsultarClienteActionPerformed(evt);
+                btVoltarListarProdutoActionPerformed(evt);
             }
         });
-        getContentPane().add(btVoltarConsultarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 90, 70, 30));
+        getContentPane().add(btVoltarListarProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 90, 70, 30));
         getContentPane().add(fieldDescricaoConsultarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 90, 220, 30));
 
         btPesquisarConsultarCliente.setText("Buscar");
-        getContentPane().add(btPesquisarConsultarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 90, 70, 30));
+        getContentPane().add(btPesquisarConsultarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 90, 80, 30));
 
         tbListarProduto.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -109,12 +109,13 @@ public class Dlg_Listar_Produtos extends javax.swing.JDialog {
         } else{
             JOptionPane.showMessageDialog(this,"Selecione uma linha da tabela.", "Pesquisar produto", JOptionPane.ERROR_MESSAGE);
         }
+        
+        
     }//GEN-LAST:event_btnSelecionarCliActionPerformed
 
     
-    private void btVoltarConsultarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btVoltarConsultarClienteActionPerformed
+    private void btVoltarListarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btVoltarListarProdutoActionPerformed
         
-        //Torna o Dlg_Menu invisivel
         this.setVisible(false);
 
         try {
@@ -122,7 +123,7 @@ public class Dlg_Listar_Produtos extends javax.swing.JDialog {
         } catch (NoSuchMethodException ex) {
             Logger.getLogger(Main_Frame.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_btVoltarConsultarClienteActionPerformed
+    }//GEN-LAST:event_btVoltarListarProdutoActionPerformed
 
     private void atualizarTabelaProduto() {
         try {
@@ -135,7 +136,7 @@ public class Dlg_Listar_Produtos extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btPesquisarConsultarCliente;
-    private javax.swing.JButton btVoltarConsultarCliente;
+    private javax.swing.JButton btVoltarListarProduto;
     private javax.swing.JButton btnSelecionarCli;
     private javax.swing.JTextField fieldDescricaoConsultarCliente;
     private javax.swing.JLabel jLabel1;

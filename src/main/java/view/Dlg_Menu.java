@@ -83,7 +83,6 @@ public class Dlg_Menu extends javax.swing.JDialog {
         btBuscarEstoque = new javax.swing.JButton();
         labAdicionarEstoque = new javax.swing.JLabel();
         panVenda = new javax.swing.JPanel();
-        labCarrinho = new javax.swing.JLabel();
         labTotalCarrinhoVenda = new javax.swing.JLabel();
         formatTotalCarrinhoVenda = new javax.swing.JFormattedTextField();
         labNomeCarrinho = new javax.swing.JLabel();
@@ -97,6 +96,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
         btFinalizarCarrinho = new javax.swing.JButton();
         btCancelarCarrinho = new javax.swing.JButton();
         cbCliente = new javax.swing.JComboBox<>();
+        labCarrinho1 = new javax.swing.JLabel();
         btEncerrar = new javax.swing.JToggleButton();
         labImagemFundo = new javax.swing.JLabel();
 
@@ -131,12 +131,12 @@ public class Dlg_Menu extends javax.swing.JDialog {
             }
         });
         panClientes.add(btListarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 210, 100, 30));
-        panClientes.add(fieldNomeCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 70, 280, -1));
+        panClientes.add(fieldNomeCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 70, 280, 30));
 
         labNomeCliente.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
         labNomeCliente.setText("Nome:");
-        panClientes.add(labNomeCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 70, -1, -1));
-        panClientes.add(fieldEmailCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 110, 280, -1));
+        panClientes.add(labNomeCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 70, -1, 30));
+        panClientes.add(fieldEmailCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 110, 280, 30));
 
         try {
             formatTelefoneCliente.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(##) #####-####")));
@@ -148,19 +148,19 @@ public class Dlg_Menu extends javax.swing.JDialog {
                 formatTelefoneClienteActionPerformed(evt);
             }
         });
-        panClientes.add(formatTelefoneCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 150, 100, -1));
+        panClientes.add(formatTelefoneCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 150, 100, 30));
 
         labTelefoneCliente.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
         labTelefoneCliente.setText("Telefone:");
-        panClientes.add(labTelefoneCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 150, -1, -1));
+        panClientes.add(labTelefoneCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 150, -1, 30));
 
         labEmailCliente.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
         labEmailCliente.setText("E-mail:");
-        panClientes.add(labEmailCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 110, -1, -1));
+        panClientes.add(labEmailCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 110, -1, 30));
 
         labCpfCliente.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
         labCpfCliente.setText("CPF:");
-        panClientes.add(labCpfCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 150, -1, -1));
+        panClientes.add(labCpfCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 150, -1, 30));
 
         try {
             formatCpfCliente.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###-##")));
@@ -172,7 +172,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
                 formatCpfClienteActionPerformed(evt);
             }
         });
-        panClientes.add(formatCpfCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 150, 100, -1));
+        panClientes.add(formatCpfCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 150, 100, 30));
 
         labCadastroCliente.setFont(new java.awt.Font("Agency FB", 1, 24)); // NOI18N
         labCadastroCliente.setText("CADASTRO CLIENTE");
@@ -203,36 +203,36 @@ public class Dlg_Menu extends javax.swing.JDialog {
         panCadastrarProduto.add(btAdicionarProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 220, 90, 30));
 
         cbUnidadeMedidaProduto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Unid Medida", "g", "kg", "ml", " " }));
-        panCadastrarProduto.add(cbUnidadeMedidaProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 130, 110, -1));
+        panCadastrarProduto.add(cbUnidadeMedidaProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 130, 110, 30));
 
         formatTamProduto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
-        panCadastrarProduto.add(formatTamProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 130, 60, -1));
+        panCadastrarProduto.add(formatTamProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 130, 60, 30));
 
         labTamProduto.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
         labTamProduto.setText("Tam/Pes:");
-        panCadastrarProduto.add(labTamProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 130, -1, -1));
-        panCadastrarProduto.add(fieldNomeProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 90, 150, -1));
+        panCadastrarProduto.add(labTamProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 130, -1, 30));
+        panCadastrarProduto.add(fieldNomeProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 90, 150, 30));
 
         labNomeProduto.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
         labNomeProduto.setText("Nome:");
-        panCadastrarProduto.add(labNomeProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 90, -1, -1));
+        panCadastrarProduto.add(labNomeProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 90, -1, 30));
 
         labQtEstoqueProduto.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
         labQtEstoqueProduto.setText("Qt. estoque:");
-        panCadastrarProduto.add(labQtEstoqueProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 170, -1, -1));
+        panCadastrarProduto.add(labQtEstoqueProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 170, -1, 30));
 
         formatQtProduto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        panCadastrarProduto.add(formatQtProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 170, 60, -1));
+        panCadastrarProduto.add(formatQtProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 170, 60, 30));
 
         formatPrecoProduto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
-        panCadastrarProduto.add(formatPrecoProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 170, 60, -1));
+        panCadastrarProduto.add(formatPrecoProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 170, 60, 30));
 
         labPrecoProduto.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
         labPrecoProduto.setText("Preço Unit:");
-        panCadastrarProduto.add(labPrecoProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 170, -1, -1));
+        panCadastrarProduto.add(labPrecoProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 170, -1, 30));
 
         cbCategoriaProduto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Categoria", "Café", "Chá", "Bebida", "Salgado", "Bolo", "Pão", " ", " " }));
-        panCadastrarProduto.add(cbCategoriaProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 90, 90, -1));
+        panCadastrarProduto.add(cbCategoriaProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 90, 90, 30));
 
         btCancelarProduto.setText("Cancelar");
         btCancelarProduto.addActionListener(new java.awt.event.ActionListener() {
@@ -299,10 +299,6 @@ public class Dlg_Menu extends javax.swing.JDialog {
         tpanMenu.addTab("Produtos", panProduto);
 
         panVenda.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        labCarrinho.setFont(new java.awt.Font("Agency FB", 1, 24)); // NOI18N
-        labCarrinho.setText("CARRINHO");
-        panVenda.add(labCarrinho, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 10, -1, -1));
 
         labTotalCarrinhoVenda.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
         labTotalCarrinhoVenda.setText("TOTAL:");
@@ -383,6 +379,10 @@ public class Dlg_Menu extends javax.swing.JDialog {
         });
         panVenda.add(cbCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 260, 190, 30));
 
+        labCarrinho1.setFont(new java.awt.Font("Agency FB", 1, 24)); // NOI18N
+        labCarrinho1.setText("CARRINHO");
+        panVenda.add(labCarrinho1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 10, -1, -1));
+
         tpanMenu.addTab("Vendas", panVenda);
 
         getContentPane().add(tpanMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 650, 340));
@@ -404,7 +404,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
         });
         getContentPane().add(btEncerrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 10, 60, 40));
 
-        labImagemFundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/imagem-fundo-3.png"))); // NOI18N
+        labImagemFundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/imagem-fundo-2.png"))); // NOI18N
         getContentPane().add(labImagemFundo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 650, 400));
 
         pack();
@@ -598,7 +598,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
     private javax.swing.JLabel labAdicionarEstoque;
     private javax.swing.JLabel labCadastrarProduto;
     private javax.swing.JLabel labCadastroCliente;
-    private javax.swing.JLabel labCarrinho;
+    private javax.swing.JLabel labCarrinho1;
     private javax.swing.JLabel labCpfCliente;
     private javax.swing.JLabel labEmailCliente;
     private javax.swing.JLabel labImagemFundo;
@@ -622,10 +622,6 @@ public class Dlg_Menu extends javax.swing.JDialog {
     private javax.swing.JTable tableCarrinho;
     private javax.swing.JTabbedPane tpanMenu;
     // End of variables declaration//GEN-END:variables
-    
-    /*   VALIDAR CAMPOS   */
-    
-      
     
     private boolean validarCamposProduto() {
         String msgErro = "";

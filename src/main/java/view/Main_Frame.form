@@ -51,10 +51,10 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="imgFundoFrmPrincipal">
+    <Component class="javax.swing.JLabel" name="labImagemFundoMain">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/imagem-fundo-1.png"/>
+          <Image iconType="3" name="/imagens/imagem-fundo-1.png"/>
         </Property>
       </Properties>
       <Constraints>

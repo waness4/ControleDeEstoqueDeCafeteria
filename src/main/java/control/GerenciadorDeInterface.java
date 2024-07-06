@@ -12,8 +12,8 @@ import view.*;
  */
 public class GerenciadorDeInterface {
     private Main_Frame main_frame = null;
-    private Dlg_Listar_Clientes dlg_clientes = null;
-    private Dlg_Listar_Produtos dlg_produtos = null;
+    private Dlg_Listar_Clientes dlg_listar_clientes = null;
+    private Dlg_Listar_Produtos dlg_listar_produtos = null;
     private Dlg_Menu dlg_menu = null;
     
     private GerenciadorDeDominio dominio;
@@ -77,11 +77,11 @@ public class GerenciadorDeInterface {
     }
     
     public void abrirJanelaDlg_Listar_Clientes() throws NoSuchMethodException{
-        abrirJanela(main_frame, dlg_clientes, Dlg_Listar_Clientes.class);
+        abrirJanela(main_frame, dlg_listar_clientes, Dlg_Listar_Clientes.class);
     }
     
     public void abrirJanelaDlg_Listar_Produtos() throws NoSuchMethodException{
-        abrirJanela(main_frame, dlg_produtos, Dlg_Listar_Produtos.class);
+        abrirJanela(main_frame, dlg_listar_produtos, Dlg_Listar_Produtos.class);
     }
     
     /*             MAIN              */

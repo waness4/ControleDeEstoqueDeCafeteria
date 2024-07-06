@@ -42,11 +42,9 @@ public class Dlg_Listar_Clientes extends javax.swing.JDialog {
         fieldDescricaoConsultarCliente = new javax.swing.JTextField();
         scrolConsultarCliente = new javax.swing.JScrollPane();
         tbListarCliente = new javax.swing.JTable();
-        btPesquisarConsultarCliente = new javax.swing.JButton();
+        btBuscarCliente = new javax.swing.JButton();
         labListaClientes = new javax.swing.JLabel();
-        btExcluirCliente = new javax.swing.JButton();
-        btSelecionarCliente1 = new javax.swing.JButton();
-        btAlterarCliente1 = new javax.swing.JButton();
+        btSelecionarCliente = new javax.swing.JButton();
         labFundoListaCliente = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -59,7 +57,7 @@ public class Dlg_Listar_Clientes extends javax.swing.JDialog {
             }
         });
         getContentPane().add(btVoltarConsultarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, 70, 30));
-        getContentPane().add(fieldDescricaoConsultarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 100, 220, 30));
+        getContentPane().add(fieldDescricaoConsultarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 100, 220, 30));
 
         tbListarCliente.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -81,52 +79,31 @@ public class Dlg_Listar_Clientes extends javax.swing.JDialog {
 
         getContentPane().add(scrolConsultarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 150, 540, 180));
 
-        btPesquisarConsultarCliente.setText("Buscar");
-        getContentPane().add(btPesquisarConsultarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 100, 70, 30));
+        btBuscarCliente.setText("Buscar");
+        btBuscarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btBuscarClienteActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btBuscarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 100, 80, 30));
 
         labListaClientes.setFont(new java.awt.Font("Agency FB", 1, 24)); // NOI18N
         labListaClientes.setText("LISTA CLIENTES");
         getContentPane().add(labListaClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 40, -1, -1));
 
-        btExcluirCliente.setText("Excluir");
-        btExcluirCliente.addActionListener(new java.awt.event.ActionListener() {
+        btSelecionarCliente.setText("Selecionar");
+        btSelecionarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btExcluirClienteActionPerformed(evt);
+                btSelecionarClienteActionPerformed(evt);
             }
         });
-        getContentPane().add(btExcluirCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 350, 110, 30));
-
-        btSelecionarCliente1.setText("Selecionar");
-        btSelecionarCliente1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btSelecionarCliente1ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btSelecionarCliente1, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 350, 110, 30));
-
-        btAlterarCliente1.setText("Alterar");
-        btAlterarCliente1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btAlterarCliente1ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btAlterarCliente1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 350, 110, 30));
+        getContentPane().add(btSelecionarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 350, 110, 30));
 
         labFundoListaCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/imagem-fundo-2.png"))); // NOI18N
         getContentPane().add(labFundoListaCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 650, 400));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btExcluirClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btExcluirClienteActionPerformed
-        int linha = tbListarCliente.getSelectedRow();
-        if(linha >=0){
-            linha = tbListarCliente.convertRowIndexToModel(linha);
-            cliSelecionado = cliTableModel.getCliente(linha);
-        } else{
-            JOptionPane.showMessageDialog(this,"Selecione uma linha da tabela.", "Pesquisar cliente", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_btExcluirClienteActionPerformed
 
     private void btVoltarConsultarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btVoltarConsultarClienteActionPerformed
         //Torna o Dlg_Menu invisivel
@@ -139,13 +116,21 @@ public class Dlg_Listar_Clientes extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btVoltarConsultarClienteActionPerformed
 
-    private void btSelecionarCliente1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSelecionarCliente1ActionPerformed
+    private void btSelecionarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSelecionarClienteActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btSelecionarCliente1ActionPerformed
+        int linha = tbListarCliente.getSelectedRow();
+        if(linha >=0){
+            linha = tbListarCliente.convertRowIndexToModel(linha);
+            cliSelecionado = cliTableModel.getCliente(linha);
+        } else{
+            JOptionPane.showMessageDialog(this,"Selecione uma linha da tabela.", "Pesquisar produto", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btSelecionarClienteActionPerformed
 
-    private void btAlterarCliente1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAlterarCliente1ActionPerformed
+    private void btBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarClienteActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btAlterarCliente1ActionPerformed
+        
+    }//GEN-LAST:event_btBuscarClienteActionPerformed
 
     private void atualizarTabelaCliente() {
         try {
@@ -157,10 +142,8 @@ public class Dlg_Listar_Clientes extends javax.swing.JDialog {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btAlterarCliente1;
-    private javax.swing.JButton btExcluirCliente;
-    private javax.swing.JButton btPesquisarConsultarCliente;
-    private javax.swing.JButton btSelecionarCliente1;
+    private javax.swing.JButton btBuscarCliente;
+    private javax.swing.JButton btSelecionarCliente;
     private javax.swing.JButton btVoltarConsultarCliente;
     private javax.swing.JTextField fieldDescricaoConsultarCliente;
     private javax.swing.JLabel labFundoListaCliente;
@@ -168,4 +151,5 @@ public class Dlg_Listar_Clientes extends javax.swing.JDialog {
     private javax.swing.JScrollPane scrolConsultarCliente;
     private javax.swing.JTable tbListarCliente;
     // End of variables declaration//GEN-END:variables
+
 }

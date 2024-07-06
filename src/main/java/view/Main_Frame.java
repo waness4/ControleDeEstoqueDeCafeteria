@@ -35,7 +35,7 @@ public class Main_Frame extends javax.swing.JFrame {
     private void initComponents() {
 
         btIniciar = new javax.swing.JToggleButton();
-        imgFundoFrmPrincipal = new javax.swing.JLabel();
+        labImagemFundoMain = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -57,8 +57,8 @@ public class Main_Frame extends javax.swing.JFrame {
         });
         getContentPane().add(btIniciar, new org.netbeans.lib.awtextra.AbsoluteConstraints(175, 155, 250, 90));
 
-        imgFundoFrmPrincipal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagem-fundo-1.png"))); // NOI18N
-        getContentPane().add(imgFundoFrmPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 600, 400));
+        labImagemFundoMain.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/imagem-fundo-1.png"))); // NOI18N
+        getContentPane().add(labImagemFundoMain, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 600, 400));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -81,6 +81,6 @@ public class Main_Frame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton btIniciar;
-    private javax.swing.JLabel imgFundoFrmPrincipal;
+    private javax.swing.JLabel labImagemFundoMain;
     // End of variables declaration//GEN-END:variables
 }

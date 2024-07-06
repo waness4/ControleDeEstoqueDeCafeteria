@@ -54,8 +54,6 @@ public class Item_Venda implements Serializable {
         this.desconto = desconto;
     }
     
-    
-
     public int getIdItem_venda() {
         return idItem_venda;
     }
