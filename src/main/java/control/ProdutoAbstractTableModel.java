@@ -18,12 +18,12 @@ public class ProdutoAbstractTableModel extends AbstractTableModel{
 
     @Override
     public int getColumnCount() {
-        return 6;
+        return 7;
     }
 
     @Override
     public String getColumnName(int column) {
-        String nomesColunas[] = {"Id", "Nome", "Categoria", "Tam/Pes", "UnidMedica", "Valor"};        
+        String nomesColunas[] = {"Id", "Nome", "Categoria", "Tam/Pes", "UnidMedica", "Valor", "Estoque"};        
         return nomesColunas[column];        
     }
     
@@ -37,6 +37,7 @@ public class ProdutoAbstractTableModel extends AbstractTableModel{
             case 3: return item.getTam_pes();
             case 4: return item.getUnidMedida();
             case 5: return item.getValor();
+            case 6: return item.getEstoque();
             default: return null;
         }
         //return null;

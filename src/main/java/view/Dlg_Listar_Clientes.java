@@ -3,6 +3,8 @@ package view;
 import control.ClienteAbstractTableModel;
 import control.GerenciadorDeInterface;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -106,7 +108,6 @@ public class Dlg_Listar_Clientes extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btVoltarConsultarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btVoltarConsultarClienteActionPerformed
-        //Torna o Dlg_Menu invisivel
         this.setVisible(false);
 
         try {
@@ -134,8 +135,9 @@ public class Dlg_Listar_Clientes extends javax.swing.JDialog {
 
     private void atualizarTabelaCliente() {
         try {
-            List<Cliente> clientes = GerenciadorDeInterface.getInstance().getDominio().listar(Cliente.class);
-            cliTableModel.setLista(clientes);
+            List<Cliente> cliente = GerenciadorDeInterface.getInstance().getDominio().listar(Cliente.class);
+            Collections.sort(cliente, Comparator.comparingInt(Cliente::getIdCliente));        
+            cliTableModel.setLista(cliente);
         } catch (ClassNotFoundException | SQLException ex) {
             JOptionPane.showMessageDialog(this, "Erro ao carregar clientes: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }

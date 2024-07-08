@@ -38,7 +38,7 @@ public class Produto implements Serializable {
     private String categoria;
     
     @Column (name="estoque", nullable = false)
-    private double estoque;
+    private int estoque;
     
     @OneToMany(mappedBy = "produto")
     private List<Item_Venda> item_venda;
@@ -46,21 +46,19 @@ public class Produto implements Serializable {
     public Produto() {
     }
     
-    
-
     public Produto(String nome, 
             double valor, 
             double tam_pes, 
             String unidMedida, 
             String categoria, 
-            double estoque){
+            int estoque){
         
         this.nome = nome;
         this.valor = valor;
         this.tam_pes = tam_pes;
         this.unidMedida = unidMedida;
         this.categoria = categoria;
-        this.estoque = this.estoque;
+        this.estoque = estoque;
     }
 
     public int getIdProduto() {
@@ -111,11 +109,11 @@ public class Produto implements Serializable {
         this.categoria = categoria;
     }
 
-    public double getEstoque() {
+    public int getEstoque() {
         return estoque;
     }
 
-    public void setEstoque(double estoque) {
+    public void setEstoque(int estoque) {
         this.estoque = estoque;
     }
 
@@ -127,13 +125,7 @@ public class Produto implements Serializable {
         this.item_venda = (List<Item_Venda>) item_venda;
     }
     
-    public int getQuantidadeTotalVendida() {
-        int quantidadeTotal = 0;
-        if (item_venda != null) {
-            for (Item_Venda item : item_venda) {
-                quantidadeTotal += item.getQtProduto();
-            }
-        }
-        return quantidadeTotal;
+    public void alterarQuantidadeEstoque(int quantidade){
+        this.setEstoque(this.getEstoque() + quantidade);
     }
 }

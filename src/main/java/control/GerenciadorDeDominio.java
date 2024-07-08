@@ -8,6 +8,7 @@ import model.Cliente;
 import model.Item_Venda;
 import model.Produto;
 import model.Venda;
+import org.hibernate.criterion.Restrictions;
 
 
 /**
@@ -43,8 +44,26 @@ public class GerenciadorDeDominio {
         return cliente;
     }
     
-    public List<Object> pesquisarCliente(String pesq)throws SQLException, ClassNotFoundException{
-        return genDAO.listar(Cliente.class);        
+    public List<Object> pesquisarCliente(String pesq, int tipo)throws SQLException, ClassNotFoundException{
+        switch(tipo){
+            case 0: return genDAO.pesquisar(Cliente.class, Restrictions.eq("idCliente", pesq));
+            case 1: return genDAO.pesquisar(Cliente.class, Restrictions.eq("nome", pesq));
+            case 2: return genDAO.pesquisar(Cliente.class, Restrictions.eq("cpf", pesq));
+            case 3: return genDAO.pesquisar(Cliente.class, Restrictions.eq("tel", pesq));
+            default: return null;
+        }        
+    }
+    
+    public void alterarCliente(
+            Cliente cliente,
+            String nome,
+            String cpf, 
+            String tel){
+        
+        cliente.setCpf(cpf);
+        cliente.setNome(nome);
+        cliente.setTel(tel);
+        genDAO.alterar(cliente);
     }
    
     
@@ -56,15 +75,54 @@ public class GerenciadorDeDominio {
             double tam_pes, 
             String unidMedida, 
             String categoria,
-            double estoque){
+            int estoque){
         
         Produto produto = new Produto(nome, valor, tam_pes, unidMedida, categoria, estoque);
         genDAO.inserir(produto);
         return produto;
     }
     
-    public List<Object> pesquisarProduto(String pesq)throws SQLException, ClassNotFoundException{
-        return genDAO.listar(Produto.class);        
+    public List<Object> pesquisarProduto(String pesq, int tipo)throws SQLException, ClassNotFoundException{
+        switch(tipo){
+            case 0: return genDAO.pesquisar(Produto.class, Restrictions.eq("idProduto", pesq));
+            case 1: return genDAO.pesquisar(Produto.class, Restrictions.eq("nome", pesq));    
+            case 2: return genDAO.pesquisar(Produto.class, Restrictions.eq("valor", pesq));
+            case 3: return genDAO.pesquisar(Produto.class, Restrictions.eq("tam_pes", pesq));    
+            case 4: return genDAO.pesquisar(Produto.class, Restrictions.eq("unidMedida", pesq));
+            case 5: return genDAO.pesquisar(Produto.class, Restrictions.eq("categoria", pesq));
+            case 6: return genDAO.pesquisar(Produto.class, Restrictions.eq("estoque", pesq));
+            default: return null;
+        }      
+    }
+    
+    public void alterarProduto(
+            Produto produto,
+            String nome, 
+            double valor, 
+            double tam_pes, 
+            String unidMedida, 
+            String categoria,
+            int estoque){
+        
+        produto.setCategoria(categoria);
+        produto.setEstoque(estoque);
+        produto.setNome(nome);
+        produto.setTam_pes(tam_pes);
+        produto.setUnidMedida(unidMedida);
+        produto.setValor(valor);
+        
+        genDAO.alterar(produto);
+    }
+    
+    public void alterarQuantidadeProduto(
+            Produto produto, 
+            int estoque){
+        produto.alterarQuantidadeEstoque(estoque);
+        genDAO.alterar(produto);
+    }
+    
+    public void excluirProduto(Produto produto){
+        //
     }
     
     /* VENDA */  

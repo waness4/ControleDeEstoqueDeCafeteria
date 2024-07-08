@@ -50,10 +50,8 @@ public class Dlg_Menu extends javax.swing.JDialog {
         btListarCliente = new javax.swing.JButton();
         fieldNomeCliente = new javax.swing.JTextField();
         labNomeCliente = new javax.swing.JLabel();
-        fieldEmailCliente = new javax.swing.JTextField();
         formatTelefoneCliente = new javax.swing.JFormattedTextField();
         labTelefoneCliente = new javax.swing.JLabel();
-        labEmailCliente = new javax.swing.JLabel();
         labCpfCliente = new javax.swing.JLabel();
         formatCpfCliente = new javax.swing.JFormattedTextField();
         labCadastroCliente = new javax.swing.JLabel();
@@ -76,12 +74,12 @@ public class Dlg_Menu extends javax.swing.JDialog {
         panControleEstoque = new javax.swing.JPanel();
         btAdicionarEstoque = new javax.swing.JButton();
         labQtEstoque = new javax.swing.JLabel();
-        fieldQtEstoque = new javax.swing.JTextField();
         btCancelarEstoque = new javax.swing.JButton();
         labNomeEstoque = new javax.swing.JLabel();
         fieldNomeEstoque = new javax.swing.JTextField();
         btBuscarEstoque = new javax.swing.JButton();
         labAdicionarEstoque = new javax.swing.JLabel();
+        fieldQtEstoque = new javax.swing.JFormattedTextField();
         panVenda = new javax.swing.JPanel();
         labTotalCarrinhoVenda = new javax.swing.JLabel();
         formatTotalCarrinhoVenda = new javax.swing.JFormattedTextField();
@@ -136,7 +134,6 @@ public class Dlg_Menu extends javax.swing.JDialog {
         labNomeCliente.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
         labNomeCliente.setText("Nome:");
         panClientes.add(labNomeCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 70, -1, 30));
-        panClientes.add(fieldEmailCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 110, 280, 30));
 
         try {
             formatTelefoneCliente.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(##) #####-####")));
@@ -148,19 +145,15 @@ public class Dlg_Menu extends javax.swing.JDialog {
                 formatTelefoneClienteActionPerformed(evt);
             }
         });
-        panClientes.add(formatTelefoneCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 150, 100, 30));
+        panClientes.add(formatTelefoneCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 130, 100, 30));
 
         labTelefoneCliente.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
         labTelefoneCliente.setText("Telefone:");
-        panClientes.add(labTelefoneCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 150, -1, 30));
-
-        labEmailCliente.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
-        labEmailCliente.setText("E-mail:");
-        panClientes.add(labEmailCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 110, -1, 30));
+        panClientes.add(labTelefoneCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 130, -1, 30));
 
         labCpfCliente.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
         labCpfCliente.setText("CPF:");
-        panClientes.add(labCpfCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 150, -1, 30));
+        panClientes.add(labCpfCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 130, -1, 30));
 
         try {
             formatCpfCliente.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###-##")));
@@ -172,7 +165,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
                 formatCpfClienteActionPerformed(evt);
             }
         });
-        panClientes.add(formatCpfCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 150, 100, 30));
+        panClientes.add(formatCpfCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 130, 100, 30));
 
         labCadastroCliente.setFont(new java.awt.Font("Agency FB", 1, 24)); // NOI18N
         labCadastroCliente.setText("CADASTRO CLIENTE");
@@ -222,6 +215,11 @@ public class Dlg_Menu extends javax.swing.JDialog {
         panCadastrarProduto.add(labQtEstoqueProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 170, -1, 30));
 
         formatQtProduto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        formatQtProduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                formatQtProdutoActionPerformed(evt);
+            }
+        });
         panCadastrarProduto.add(formatQtProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 170, 60, 30));
 
         formatPrecoProduto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
@@ -261,7 +259,6 @@ public class Dlg_Menu extends javax.swing.JDialog {
         labQtEstoque.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
         labQtEstoque.setText("Adicionar Quantidade:");
         panControleEstoque.add(labQtEstoque, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 140, -1, 30));
-        panControleEstoque.add(fieldQtEstoque, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 140, 70, 30));
 
         btCancelarEstoque.setText("Cancelar");
         btCancelarEstoque.addActionListener(new java.awt.event.ActionListener() {
@@ -293,6 +290,14 @@ public class Dlg_Menu extends javax.swing.JDialog {
         labAdicionarEstoque.setFont(new java.awt.Font("Agency FB", 1, 24)); // NOI18N
         labAdicionarEstoque.setText("ADICIONAR ESTOQUE");
         panControleEstoque.add(labAdicionarEstoque, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 30, -1, -1));
+
+        fieldQtEstoque.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        fieldQtEstoque.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldQtEstoqueActionPerformed(evt);
+            }
+        });
+        panControleEstoque.add(fieldQtEstoque, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 140, 80, 30));
 
         panProduto.addTab("Controle de Estoque", panControleEstoque);
 
@@ -425,9 +430,22 @@ public class Dlg_Menu extends javax.swing.JDialog {
             unidMedida = (String) cbUnidadeMedidaProduto.getSelectedItem(),
             categoria = (String) cbCategoriaProduto.getSelectedItem();
             double valor = Double.parseDouble(formatPrecoProduto.getText().replace(',', '.'));
-            double estoque = Double.parseDouble(formatQtProduto.getText().replace(',', '.'));
+            int estoque = Integer.parseInt(formatQtProduto.getText());
             double tam_pes = Double.parseDouble(formatTamProduto.getText().replace(',', '.'));
 
+            try {
+                List<Object> produtoExistente = GerenciadorDeInterface.getInstance().getDominio().pesquisarProduto(nome, 1);
+                if (produtoExistente != null && !produtoExistente.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Produto com o nome " + nome + " já existe.", "ERRO: Adicionar Produto", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(Dlg_Menu.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Dlg_Menu.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
             try{
                 Produto produto = GerenciadorDeInterface.getInstance().getDominio().inserirProduto(nome, valor, tam_pes, unidMedida, categoria, estoque);
                 JOptionPane.showMessageDialog(this, "Produto " + produto.getIdProduto() + " inserido com sucesso.", "Cadastro Produto", JOptionPane.INFORMATION_MESSAGE);                
@@ -452,6 +470,39 @@ public class Dlg_Menu extends javax.swing.JDialog {
 
     private void btAdicionarEstoqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAdicionarEstoqueActionPerformed
 
+    if (fieldNomeEstoque.getText().isEmpty() || fieldQtEstoque.getText().isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Preencha todos os campos", "ERRO: Adicionar Estoque", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    try {
+        int estoque = Integer.parseInt(fieldQtEstoque.getText());
+        System.out.println(estoque);
+        List<Object> produtos = GerenciadorDeInterface.getInstance().getDominio().pesquisarProduto(fieldNomeEstoque.getText(), 1);
+
+        if (produtos != null && !produtos.isEmpty()) {
+            Produto produto = (Produto) produtos.get(0);
+            if (produto != null) {
+                try {
+                    GerenciadorDeInterface.getInstance().getDominio().alterarQuantidadeProduto(produto, estoque);
+                    JOptionPane.showMessageDialog(this, "Estoque adicionado!", "Adicionar Estoque", JOptionPane.INFORMATION_MESSAGE);
+                } catch (HibernateException ex) {
+                    JOptionPane.showMessageDialog(this, "Erro ao atualizar o estoque: " + ex.getMessage(), "ERRO: Adicionar Estoque", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Produto " + fieldNomeEstoque.getText() + " não encontrado", "ERRO: Adicionar Estoque", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Produto " + fieldNomeEstoque.getText() + " não encontrado", "ERRO: Adicionar Estoque", JOptionPane.ERROR_MESSAGE);
+        }
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Quantidade: " + fieldQtEstoque.getText() + " inválida.", "ERRO: Adicionar Estoque", JOptionPane.ERROR_MESSAGE);
+    }   catch (SQLException ex) {
+            Logger.getLogger(Dlg_Menu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Dlg_Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_btAdicionarEstoqueActionPerformed
 
     private void formatTelefoneClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formatTelefoneClienteActionPerformed
@@ -482,6 +533,11 @@ public class Dlg_Menu extends javax.swing.JDialog {
             String cpf = formatCpfCliente.getText();
             String tel = formatTelefoneCliente.getText();
             
+            if(!validarCpfUnico(cpf)){
+                formatCpfCliente.setText("");
+                return;
+            }                
+            
             try{
                 Cliente cliente = GerenciadorDeInterface.getInstance().getDominio().inserirCliente(nome, cpf, tel);
                 JOptionPane.showMessageDialog(this, "Cliente " + cliente.getIdCliente() + " inserido com sucesso.", "Cadastro Cliente", JOptionPane.INFORMATION_MESSAGE);
@@ -501,7 +557,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
     }//GEN-LAST:event_fieldNomeEstoqueActionPerformed
 
     private void btBuscarEstoqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarEstoqueActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_btBuscarEstoqueActionPerformed
 
     private void btBuscarCarrinhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarCarrinhoActionPerformed
@@ -563,6 +619,14 @@ public class Dlg_Menu extends javax.swing.JDialog {
         
     }//GEN-LAST:event_cbClienteActionPerformed
 
+    private void fieldQtEstoqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldQtEstoqueActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fieldQtEstoqueActionPerformed
+
+    private void formatQtProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formatQtProdutoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formatQtProdutoActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAdicionarCarrinho;
@@ -582,12 +646,11 @@ public class Dlg_Menu extends javax.swing.JDialog {
     private javax.swing.JComboBox<String> cbCategoriaProduto;
     private javax.swing.JComboBox<String> cbCliente;
     private javax.swing.JComboBox<String> cbUnidadeMedidaProduto;
-    private javax.swing.JTextField fieldEmailCliente;
     private javax.swing.JTextField fieldNomeCarrinho;
     private javax.swing.JTextField fieldNomeCliente;
     private javax.swing.JTextField fieldNomeEstoque;
     private javax.swing.JTextField fieldNomeProduto;
-    private javax.swing.JTextField fieldQtEstoque;
+    private javax.swing.JFormattedTextField fieldQtEstoque;
     private javax.swing.JFormattedTextField formatCpfCliente;
     private javax.swing.JFormattedTextField formatPrecoProduto;
     private javax.swing.JFormattedTextField formatQtCarrinho;
@@ -600,7 +663,6 @@ public class Dlg_Menu extends javax.swing.JDialog {
     private javax.swing.JLabel labCadastroCliente;
     private javax.swing.JLabel labCarrinho1;
     private javax.swing.JLabel labCpfCliente;
-    private javax.swing.JLabel labEmailCliente;
     private javax.swing.JLabel labImagemFundo;
     private javax.swing.JLabel labNomeCarrinho;
     private javax.swing.JLabel labNomeCliente;
@@ -643,17 +705,17 @@ public class Dlg_Menu extends javax.swing.JDialog {
             labNomeProduto.setForeground(Color.red); 
         }
         
-        if(formatPrecoProduto.getText().isEmpty()){
+        if(formatPrecoProduto.getValue() == null){
             msgErro = msgErro + "Adicione um preço.\n";
             labPrecoProduto.setForeground(Color.red); 
         }
         
-        if(formatQtProduto.getText().isEmpty()){
+        if(formatQtProduto.getValue() == null){
             msgErro = msgErro + "Adicione um quantidade de estoque.\n";
             labQtEstoqueProduto.setForeground(Color.red); 
         }
         
-        if(formatTamProduto.getText().isEmpty()){
+        if(formatTamProduto.getValue() == null){
             msgErro = msgErro + "Adicione uma tamanho/ peso.\n";
             labTamProduto.setForeground(Color.red); 
         }
@@ -663,7 +725,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
         } else {            
             JOptionPane.showMessageDialog(this, msgErro, "ERRO Produto", JOptionPane.ERROR_MESSAGE);
             return false;
-        }
+        }        
     }
     
     private boolean validarCamposCliente() {
@@ -679,11 +741,6 @@ public class Dlg_Menu extends javax.swing.JDialog {
         if(fieldNomeCliente.getText().isEmpty()){
             msgErro = msgErro + "Adicione um nome.\n";
             labNomeCliente.setForeground(Color.red); 
-        }
-        
-        if(fieldEmailCliente.getText().isEmpty()){
-            msgErro = msgErro + "Adicione um email.\n";
-            labEmailCliente.setForeground(Color.red); 
         }
         
         if(formatTelefoneCliente.getValue() == null){
@@ -743,19 +800,15 @@ public class Dlg_Menu extends javax.swing.JDialog {
     public void colorBlackCliente(){
         labCpfCliente.setForeground(Color.black);
         labNomeCliente.setForeground(Color.black);
-        labEmailCliente.setForeground(Color.black);
         labTelefoneCliente.setForeground(Color.black);
     }
-    
-    
-    
+        
     /* LIMPAR CAMPOS */
     
     
     public void limparCamposCliente(){
         formatCpfCliente.setText("");
-        fieldNomeCliente.setText("");
-        fieldEmailCliente.setText("");        
+        fieldNomeCliente.setText("");      
         formatTelefoneCliente.setText("");
     }
     
@@ -785,5 +838,20 @@ public class Dlg_Menu extends javax.swing.JDialog {
         for (Cliente cliente : clientes) {
             cbCliente.addItem(cliente.getNome() + " - " + cliente.getCpf());
         }        
+    }
+
+    private boolean validarCpfUnico(String cpf) {
+        try {
+            List<Object> cpfExistente = GerenciadorDeInterface.getInstance().getDominio().pesquisarCliente(cpf, 2);
+            if (cpfExistente != null && !cpfExistente.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Cliente com o CPF " + cpf + " já existe.", "ERRO: Adicionar Cliente", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Dlg_Menu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Dlg_Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return true;
     }
 }

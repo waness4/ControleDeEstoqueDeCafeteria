@@ -1,8 +1,9 @@
 package view;
 
-import control.ClienteAbstractTableModel;
 import control.GerenciadorDeInterface;
 import control.ProdutoAbstractTableModel;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,7 +18,7 @@ import model.Produto;
 public class Dlg_Listar_Produtos extends javax.swing.JDialog {
 
     
-    private GerenciadorDeInterface inter;    
+    private GerenciadorDeInterface inter; 
     private ProdutoAbstractTableModel proTableModel;
     private Produto proSelecionado = null;
     
@@ -72,11 +73,11 @@ public class Dlg_Listar_Produtos extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Id", "Nome", "Tam/Pes", "Medida", "Estoque", "Preço Unid"
+                "Id", "Nome", "Categoria", "Medida", "Tam/Pes", "Preço Unid", "Estoque"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -109,15 +110,10 @@ public class Dlg_Listar_Produtos extends javax.swing.JDialog {
         } else{
             JOptionPane.showMessageDialog(this,"Selecione uma linha da tabela.", "Pesquisar produto", JOptionPane.ERROR_MESSAGE);
         }
-        
-        
     }//GEN-LAST:event_btnSelecionarCliActionPerformed
 
-    
     private void btVoltarListarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btVoltarListarProdutoActionPerformed
-        
         this.setVisible(false);
-
         try {
             inter.abrirJanelaDlg_Menu();
         } catch (NoSuchMethodException ex) {
@@ -127,10 +123,11 @@ public class Dlg_Listar_Produtos extends javax.swing.JDialog {
 
     private void atualizarTabelaProduto() {
         try {
-            List<Produto> clientes = GerenciadorDeInterface.getInstance().getDominio().listar(Produto.class);
-            proTableModel.setLista(clientes); // Atualiza o modelo de tabela com a lista de clientes
+            List<Produto> produto = GerenciadorDeInterface.getInstance().getDominio().listar(Produto.class);
+            Collections.sort(produto, Comparator.comparingInt(Produto::getIdProduto));  
+            proTableModel.setLista(produto);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar clientes: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Erro ao carregar produtos: " + ex.getMessage(), "ERRO: Atualizar Lista Produtos", JOptionPane.ERROR_MESSAGE);
         }
     }
 
