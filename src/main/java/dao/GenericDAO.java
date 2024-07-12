@@ -106,4 +106,26 @@ public class GenericDAO {
         }
         return resultado;
     }
+    
+    public void excluir(Object obj) throws HibernateException {
+        Session sessao = null;
+        try {
+            sessao = ConexaoHibernate.getSessionFactory().openSession();
+            sessao.getTransaction().begin();
+            
+            sessao.delete(obj);
+            
+            sessao.getTransaction().commit();
+            
+        } catch (HibernateException ex) {
+            if (sessao != null) {
+                sessao.getTransaction().rollback();
+            }
+            throw new HibernateException(ex);
+        } finally {
+            if (sessao != null) {
+                sessao.close();
+            }
+        }
+    }    
 }

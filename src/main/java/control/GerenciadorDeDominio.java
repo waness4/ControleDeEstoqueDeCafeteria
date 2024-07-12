@@ -65,6 +65,10 @@ public class GerenciadorDeDominio {
         cliente.setTel(tel);
         genDAO.alterar(cliente);
     }
+    
+    public void excluirCliente(Cliente cliente){
+        genDAO.excluir(cliente);
+    }
    
     
     /* PRODUTO*/
@@ -122,7 +126,7 @@ public class GerenciadorDeDominio {
     }
     
     public void excluirProduto(Produto produto){
-        //
+        genDAO.excluir(produto);
     }
     
     /* VENDA */  

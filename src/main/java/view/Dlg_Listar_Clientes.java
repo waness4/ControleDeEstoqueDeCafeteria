@@ -2,15 +2,21 @@ package view;
 
 import control.ClienteAbstractTableModel;
 import control.GerenciadorDeInterface;
+import java.awt.GridLayout;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.table.TableModel;
 import model.Cliente;
+import org.hibernate.HibernateException;
 
 /**
  *
@@ -29,6 +35,7 @@ public class Dlg_Listar_Clientes extends javax.swing.JDialog {
         cliTableModel = new ClienteAbstractTableModel();
         tbListarCliente.setModel((TableModel) cliTableModel);        
         atualizarTabelaCliente();
+        setFalseButton();
     }
 
     /**
@@ -40,26 +47,35 @@ public class Dlg_Listar_Clientes extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btVoltarConsultarCliente = new javax.swing.JButton();
-        fieldDescricaoConsultarCliente = new javax.swing.JTextField();
+        btVoltarListarCliente = new javax.swing.JButton();
+        fieldListarCliente = new javax.swing.JTextField();
         scrolConsultarCliente = new javax.swing.JScrollPane();
         tbListarCliente = new javax.swing.JTable();
         btBuscarCliente = new javax.swing.JButton();
         labListaClientes = new javax.swing.JLabel();
+        btExcluirCliente = new javax.swing.JButton();
+        btAlterarCliente = new javax.swing.JButton();
         btSelecionarCliente = new javax.swing.JButton();
+        btCancelarCliente = new javax.swing.JButton();
         labFundoListaCliente = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        btVoltarConsultarCliente.setText("Voltar");
-        btVoltarConsultarCliente.addActionListener(new java.awt.event.ActionListener() {
+        btVoltarListarCliente.setText("Voltar");
+        btVoltarListarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btVoltarConsultarClienteActionPerformed(evt);
+                btVoltarListarClienteActionPerformed(evt);
             }
         });
-        getContentPane().add(btVoltarConsultarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, 70, 30));
-        getContentPane().add(fieldDescricaoConsultarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 100, 220, 30));
+        getContentPane().add(btVoltarListarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, 70, 30));
+
+        fieldListarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldListarClienteActionPerformed(evt);
+            }
+        });
+        getContentPane().add(fieldListarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 100, 220, 30));
 
         tbListarCliente.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -77,6 +93,7 @@ public class Dlg_Listar_Clientes extends javax.swing.JDialog {
                 return types [columnIndex];
             }
         });
+        tbListarCliente.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         scrolConsultarCliente.setViewportView(tbListarCliente);
 
         getContentPane().add(scrolConsultarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 150, 540, 180));
@@ -87,11 +104,27 @@ public class Dlg_Listar_Clientes extends javax.swing.JDialog {
                 btBuscarClienteActionPerformed(evt);
             }
         });
-        getContentPane().add(btBuscarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 100, 80, 30));
+        getContentPane().add(btBuscarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 100, 80, 30));
 
         labListaClientes.setFont(new java.awt.Font("Agency FB", 1, 24)); // NOI18N
         labListaClientes.setText("LISTA CLIENTES");
         getContentPane().add(labListaClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 40, -1, -1));
+
+        btExcluirCliente.setText("Excluir");
+        btExcluirCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btExcluirClienteActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btExcluirCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 350, 110, 30));
+
+        btAlterarCliente.setText("Alterar");
+        btAlterarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAlterarClienteActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btAlterarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 350, 110, 30));
 
         btSelecionarCliente.setText("Selecionar");
         btSelecionarCliente.addActionListener(new java.awt.event.ActionListener() {
@@ -99,7 +132,15 @@ public class Dlg_Listar_Clientes extends javax.swing.JDialog {
                 btSelecionarClienteActionPerformed(evt);
             }
         });
-        getContentPane().add(btSelecionarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 350, 110, 30));
+        getContentPane().add(btSelecionarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 350, 110, 30));
+
+        btCancelarCliente.setText("Cancelar");
+        btCancelarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCancelarClienteActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btCancelarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 350, 110, 30));
 
         labFundoListaCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/imagem-fundo-2.png"))); // NOI18N
         getContentPane().add(labFundoListaCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 650, 400));
@@ -107,7 +148,8 @@ public class Dlg_Listar_Clientes extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btVoltarConsultarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btVoltarConsultarClienteActionPerformed
+    private void btVoltarListarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btVoltarListarClienteActionPerformed
+        
         this.setVisible(false);
 
         try {
@@ -115,23 +157,125 @@ public class Dlg_Listar_Clientes extends javax.swing.JDialog {
         } catch (NoSuchMethodException ex) {
             Logger.getLogger(Main_Frame.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_btVoltarConsultarClienteActionPerformed
+        
+    }//GEN-LAST:event_btVoltarListarClienteActionPerformed
 
-    private void btSelecionarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSelecionarClienteActionPerformed
-        // TODO add your handling code here:
-        int linha = tbListarCliente.getSelectedRow();
-        if(linha >=0){
-            linha = tbListarCliente.convertRowIndexToModel(linha);
-            cliSelecionado = cliTableModel.getCliente(linha);
-        } else{
-            JOptionPane.showMessageDialog(this,"Selecione uma linha da tabela.", "Pesquisar produto", JOptionPane.ERROR_MESSAGE);
+    private void btExcluirClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btExcluirClienteActionPerformed
+        
+        int selectedRow = tbListarCliente.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Selecione um cliente.", "ERRO: Excluir Cliente", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-    }//GEN-LAST:event_btSelecionarClienteActionPerformed
+
+        Cliente cliente = cliTableModel.getCliente(selectedRow);
+        int confirm = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja excluir o cliente " + cliente.getNome() + "?", "Excluir Cliente", JOptionPane.YES_NO_OPTION);
+    
+        if (confirm == JOptionPane.YES_OPTION) {
+            try {
+                GerenciadorDeInterface.getInstance().getDominio().excluirCliente(cliente);
+                atualizarTabelaCliente();
+                JOptionPane.showMessageDialog(this, "Cliente excluído com sucesso.", "Excluir Cliente", JOptionPane.INFORMATION_MESSAGE);
+                setFalseButton();
+            } catch (HibernateException ex) {
+                JOptionPane.showMessageDialog(this, "Erro ao excluir cliente: " + ex.getMessage(), "ERRO: Excluir Cliente", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        
+    }//GEN-LAST:event_btExcluirClienteActionPerformed
 
     private void btBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarClienteActionPerformed
-        // TODO add your handling code here:
+
+        if (campoBuscaVazio()) {
+            JOptionPane.showMessageDialog(this, "Digite algo para buscar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            atualizarTabelaCliente();
+        }
+
+        String pesquisa = fieldListarCliente.getText().trim();
+
+        try {
+            List<Cliente> clientesFiltrados = new ArrayList<>();
+            List<Cliente> clientes = GerenciadorDeInterface.getInstance().getDominio().listar(Cliente.class);
+            for (Cliente cliente : clientes) {
+                if (cliente.getNome().toLowerCase().contains(pesquisa.toLowerCase()) ||
+                    cliente.getTel().toLowerCase().contains(pesquisa.toLowerCase()) ||
+                    cliente.getCpf().toLowerCase().contains(pesquisa.toLowerCase()) ||
+                    String.valueOf(cliente.getIdCliente()).toLowerCase().contains(pesquisa.toLowerCase())) {
+
+                    clientesFiltrados.add(cliente);
+                }
+            }
+            
+            if (clientesFiltrados.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Nenhum cliente encontrado com os critérios de busca.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                fieldListarCliente.setText("");
+                atualizarTabelaCliente();
+            } else{
+                cliTableModel.setLista(clientesFiltrados);
+            }            
+        } catch (ClassNotFoundException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao buscar clientes: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
         
     }//GEN-LAST:event_btBuscarClienteActionPerformed
+
+    private void btAlterarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAlterarClienteActionPerformed
+
+        int selectedRow = tbListarCliente.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Selecione um cliente.", "ERRO: Alterar Cliente", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Cliente cliente = cliTableModel.getCliente(selectedRow);
+        
+        JTextField nomeField = new JTextField(cliente.getNome());
+        JTextField cpfField = new JTextField(cliente.getCpf());
+        JTextField telField = new JTextField(cliente.getTel());
+        
+        JPanel panel = new JPanel(new GridLayout(3,2));
+        
+        panel.add(new JLabel("Nome:"));
+        panel.add(nomeField);
+        panel.add(new JLabel("CPF:"));
+        panel.add(cpfField);
+        panel.add(new JLabel("Telefone:"));
+        panel.add(telField);
+
+        int result = JOptionPane.showConfirmDialog(null, panel, "Alterar Cliente", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION) {
+            String novoNome = nomeField.getText();
+            String novoCpf = cpfField.getText();
+            String novoTel = telField.getText();
+
+            if (!novoNome.isEmpty() && !novoCpf.isEmpty() && !novoTel.isEmpty()) {
+                GerenciadorDeInterface.getInstance().getDominio().alterarCliente(cliente, novoNome, novoCpf, novoTel);
+                atualizarTabelaCliente();
+                JOptionPane.showMessageDialog(this, "Cliente alterado com sucesso.", "Alterar Cliente", JOptionPane.INFORMATION_MESSAGE);
+                setFalseButton();
+            } else {
+                JOptionPane.showMessageDialog(this, "Todos os campos devem ser preenchidos.", "ERRO: Alterar Cliente", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btAlterarClienteActionPerformed
+
+    private void btSelecionarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSelecionarClienteActionPerformed
+        int selectedRow = tbListarCliente.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Selecione um cliente.", "ERRO: Selecionar Cliente", JOptionPane.ERROR_MESSAGE);
+        } else {
+            setTrueButton();
+        }        
+    }//GEN-LAST:event_btSelecionarClienteActionPerformed
+
+    private void btCancelarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelarClienteActionPerformed
+        setFalseButton();
+    }//GEN-LAST:event_btCancelarClienteActionPerformed
+
+    private void fieldListarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldListarClienteActionPerformed
+        
+    }//GEN-LAST:event_fieldListarClienteActionPerformed
 
     private void atualizarTabelaCliente() {
         try {
@@ -143,15 +287,37 @@ public class Dlg_Listar_Clientes extends javax.swing.JDialog {
         }
     }
     
+    private void setTrueButton(){
+        btSelecionarCliente.setVisible(false);
+        tbListarCliente.setEnabled(false);        
+        btExcluirCliente.setVisible(true);
+        btCancelarCliente.setVisible(true);
+        btAlterarCliente.setVisible(true);
+    }
+    
+    private void setFalseButton(){
+        btSelecionarCliente.setVisible(true);  
+        tbListarCliente.setEnabled(true);
+        btExcluirCliente.setVisible(false);
+        btCancelarCliente.setVisible(false);
+        btAlterarCliente.setVisible(false);        
+    }
+    
+    private boolean campoBuscaVazio() {
+        return fieldListarCliente.getText().trim().isEmpty();
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btAlterarCliente;
     private javax.swing.JButton btBuscarCliente;
+    private javax.swing.JButton btCancelarCliente;
+    private javax.swing.JButton btExcluirCliente;
     private javax.swing.JButton btSelecionarCliente;
-    private javax.swing.JButton btVoltarConsultarCliente;
-    private javax.swing.JTextField fieldDescricaoConsultarCliente;
+    private javax.swing.JButton btVoltarListarCliente;
+    private javax.swing.JTextField fieldListarCliente;
     private javax.swing.JLabel labFundoListaCliente;
     private javax.swing.JLabel labListaClientes;
     private javax.swing.JScrollPane scrolConsultarCliente;
     private javax.swing.JTable tbListarCliente;
     // End of variables declaration//GEN-END:variables
-
 }
