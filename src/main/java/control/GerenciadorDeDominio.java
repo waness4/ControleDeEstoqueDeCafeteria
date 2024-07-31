@@ -71,6 +71,16 @@ public class GerenciadorDeDominio {
     public void excluirCliente(Cliente cliente){
         genDAO.excluir(cliente);
     }
+    
+    public boolean clienteTemReferencias(Cliente cliente) throws ClassNotFoundException, SQLException {
+        List<Venda> vendas = listar(Venda.class);
+        for (Venda venda : vendas) {
+            if (venda.getCliente().getIdCliente() == cliente.getIdCliente()) {
+                return true;
+            }
+        }
+        return false;
+    }
    
     
     /* PRODUTO*/

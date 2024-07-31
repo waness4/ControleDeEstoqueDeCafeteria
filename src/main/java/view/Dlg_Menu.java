@@ -699,7 +699,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
             return null;
         }
         
-        Set<Cliente> clienteSet = new LinkedHashSet<>(clientes); // Utiliza LinkedHashSet para manter a ordem e remover duplicatas
+        Set<Cliente> clienteSet = new LinkedHashSet<>(clientes); 
         JComboBox<Cliente> cbClientes = new JComboBox<>(new DefaultComboBoxModel<>(clienteSet.toArray(new Cliente[0])));
 
         int result = JOptionPane.showConfirmDialog(this, cbClientes, "Selecionar Cliente", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -717,11 +717,9 @@ public class Dlg_Menu extends javax.swing.JDialog {
     }//GEN-LAST:event_formatTotalVendaActionPerformed
 
     private void fieldQtEstoqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldQtEstoqueActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_fieldQtEstoqueActionPerformed
 
     private void formatQtProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formatQtProdutoActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_formatQtProdutoActionPerformed
 
     private void btEditarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditarVendaActionPerformed

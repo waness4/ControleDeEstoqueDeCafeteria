@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
@@ -16,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.table.TableModel;
 import model.Cliente;
+import model.Venda;
 import org.hibernate.HibernateException;
 
 /**
@@ -86,9 +89,16 @@ public class Dlg_Listar_Clientes extends javax.swing.JDialog {
             Class[] types = new Class [] {
                 java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         tbListarCliente.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -173,14 +183,24 @@ public class Dlg_Listar_Clientes extends javax.swing.JDialog {
         int confirm = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja excluir o cliente " + cliente.getNome() + "?", "Excluir Cliente", JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
-            excluirCliente(cliente);
+            try {
+                excluirCliente(cliente);
+            } catch (ClassNotFoundException | SQLException ex) {
+                Logger.getLogger(Dlg_Listar_Clientes.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
     }//GEN-LAST:event_btExcluirClienteActionPerformed
 
-    private void excluirCliente(Cliente cliente) {
+    private void excluirCliente(Cliente cliente) throws ClassNotFoundException, SQLException {
         
         try {
+            boolean temReferencias = GerenciadorDeInterface.getInstance().getDominio().clienteTemReferencias(cliente);
+            if (temReferencias) {
+                mostrarMensagem("Não é possível excluir o cliente. Ele está referenciado por outras entidades.", "ERRO: Excluir Cliente", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             GerenciadorDeInterface.getInstance().getDominio().excluirCliente(cliente);
             atualizarTabelaCliente();
             mostrarMensagem("Cliente excluído com sucesso.", "Excluir Cliente", JOptionPane.INFORMATION_MESSAGE);
@@ -309,6 +329,8 @@ public class Dlg_Listar_Clientes extends javax.swing.JDialog {
         
         try {
             List<Cliente> clientes = GerenciadorDeInterface.getInstance().getDominio().listar(Cliente.class);
+            Set<Cliente> clienteSet = new LinkedHashSet<>(clientes); 
+            clientes = new ArrayList<>(clienteSet); 
             Collections.sort(clientes, Comparator.comparingInt(Cliente::getIdCliente));
             cliTableModel.setLista(clientes);
         } catch (ClassNotFoundException | SQLException ex) {
