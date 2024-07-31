@@ -1,14 +1,16 @@
 package view;
 
 import control.GerenciadorDeInterface;
+import control.VendaAbstractTableModel;
 import java.awt.Color;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
-
 import model.Cliente;
 import model.Item_Venda;
 import model.Produto;
@@ -21,17 +23,16 @@ import org.hibernate.HibernateException;
  */
 public class Dlg_Menu extends javax.swing.JDialog {
     
-    private Dlg_Listar_Clientes dlg_cliente = null;
-    private Dlg_Listar_Produtos dlg_produtos = null;
-    private GerenciadorDeInterface inter;  
-    private Venda vendaAtual = null;
+    private Venda vendaAtual = new Venda();
+    private VendaAbstractTableModel vendaTableModel;
+    private Cliente clienteSelecionado = null;
+    private Produto produtoSelecionado = null;
     
-    public Dlg_Menu(java.awt.Frame parent, boolean modal, GerenciadorDeInterface inter) {
+    public Dlg_Menu(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        this.inter = inter;
-        this.dlg_cliente = new Dlg_Listar_Clientes(parent, modal, inter);
-        this.dlg_produtos = new Dlg_Listar_Produtos(parent, modal, inter);
+        vendaTableModel = new VendaAbstractTableModel();
+        tableVenda.setModel(vendaTableModel);
     }
 
     /**
@@ -45,7 +46,6 @@ public class Dlg_Menu extends javax.swing.JDialog {
 
         tpanMenu = new javax.swing.JTabbedPane();
         panClientes = new javax.swing.JPanel();
-        btAdicionarCliente = new javax.swing.JButton();
         btCancelarCliente = new javax.swing.JButton();
         btListarCliente = new javax.swing.JButton();
         fieldNomeCliente = new javax.swing.JTextField();
@@ -55,6 +55,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
         labCpfCliente = new javax.swing.JLabel();
         formatCpfCliente = new javax.swing.JFormattedTextField();
         labCadastroCliente = new javax.swing.JLabel();
+        btAdicionarCliente = new javax.swing.JButton();
         panProduto = new javax.swing.JTabbedPane();
         panCadastrarProduto = new javax.swing.JPanel();
         btListarProduto = new javax.swing.JButton();
@@ -81,20 +82,20 @@ public class Dlg_Menu extends javax.swing.JDialog {
         labAdicionarEstoque = new javax.swing.JLabel();
         fieldQtEstoque = new javax.swing.JFormattedTextField();
         panVenda = new javax.swing.JPanel();
-        labTotalCarrinhoVenda = new javax.swing.JLabel();
-        formatTotalCarrinhoVenda = new javax.swing.JFormattedTextField();
-        labNomeCarrinho = new javax.swing.JLabel();
-        fieldNomeCarrinho = new javax.swing.JTextField();
+        labTotalVenda = new javax.swing.JLabel();
+        formatTotalVenda = new javax.swing.JFormattedTextField();
+        labNomeVenda = new javax.swing.JLabel();
         scrolpanCarrinho = new javax.swing.JScrollPane();
-        tableCarrinho = new javax.swing.JTable();
-        labQtCarrinho = new javax.swing.JLabel();
-        formatQtCarrinho = new javax.swing.JFormattedTextField();
-        btBuscarCarrinho = new javax.swing.JToggleButton();
-        btAdicionarCarrinho = new javax.swing.JButton();
-        btFinalizarCarrinho = new javax.swing.JButton();
-        btCancelarCarrinho = new javax.swing.JButton();
-        cbCliente = new javax.swing.JComboBox<>();
-        labCarrinho1 = new javax.swing.JLabel();
+        tableVenda = new javax.swing.JTable();
+        labQtVenda = new javax.swing.JLabel();
+        formatQtVenda = new javax.swing.JFormattedTextField();
+        btEditarVenda = new javax.swing.JButton();
+        btFinalizarVenda = new javax.swing.JButton();
+        btCancelarVenda = new javax.swing.JButton();
+        labVenda = new javax.swing.JLabel();
+        fieldNomeVenda = new javax.swing.JTextField();
+        btBuscarProduto = new javax.swing.JButton();
+        btAdicionarVenda = new javax.swing.JButton();
         btEncerrar = new javax.swing.JToggleButton();
         labImagemFundo = new javax.swing.JLabel();
 
@@ -106,14 +107,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
 
         panClientes.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        btAdicionarCliente.setText("Adicionar");
-        btAdicionarCliente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btAdicionarClienteActionPerformed(evt);
-            }
-        });
-        panClientes.add(btAdicionarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 210, 100, 30));
-
+        btCancelarCliente.setMnemonic('C');
         btCancelarCliente.setText("Cancelar");
         btCancelarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -122,6 +116,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
         });
         panClientes.add(btCancelarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 210, 90, 30));
 
+        btListarCliente.setMnemonic('L');
         btListarCliente.setText("Listar");
         btListarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -171,6 +166,15 @@ public class Dlg_Menu extends javax.swing.JDialog {
         labCadastroCliente.setText("CADASTRO CLIENTE");
         panClientes.add(labCadastroCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 20, -1, -1));
 
+        btAdicionarCliente.setMnemonic('A');
+        btAdicionarCliente.setText("Adicionar");
+        btAdicionarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAdicionarClienteActionPerformed(evt);
+            }
+        });
+        panClientes.add(btAdicionarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 210, 100, 30));
+
         tpanMenu.addTab("Clientes", panClientes);
 
         panProduto.setForeground(new java.awt.Color(102, 51, 0));
@@ -179,6 +183,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
 
         panCadastrarProduto.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        btListarProduto.setMnemonic('L');
         btListarProduto.setText("Listar");
         btListarProduto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -187,6 +192,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
         });
         panCadastrarProduto.add(btListarProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 220, 90, 30));
 
+        btAdicionarProduto.setMnemonic('A');
         btAdicionarProduto.setText("Adicionar");
         btAdicionarProduto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -230,8 +236,14 @@ public class Dlg_Menu extends javax.swing.JDialog {
         panCadastrarProduto.add(labPrecoProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 170, -1, 30));
 
         cbCategoriaProduto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Categoria", "Café", "Chá", "Bebida", "Salgado", "Bolo", "Pão", " ", " " }));
+        cbCategoriaProduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbCategoriaProdutoActionPerformed(evt);
+            }
+        });
         panCadastrarProduto.add(cbCategoriaProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 90, 90, 30));
 
+        btCancelarProduto.setMnemonic('C');
         btCancelarProduto.setText("Cancelar");
         btCancelarProduto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -248,6 +260,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
 
         panControleEstoque.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        btAdicionarEstoque.setMnemonic('A');
         btAdicionarEstoque.setText("Adicionar");
         btAdicionarEstoque.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -260,6 +273,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
         labQtEstoque.setText("Adicionar Quantidade:");
         panControleEstoque.add(labQtEstoque, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 140, -1, 30));
 
+        btCancelarEstoque.setMnemonic('C');
         btCancelarEstoque.setText("Cancelar");
         btCancelarEstoque.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -279,6 +293,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
         });
         panControleEstoque.add(fieldNomeEstoque, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 90, 170, 30));
 
+        btBuscarEstoque.setMnemonic('B');
         btBuscarEstoque.setText("Buscar");
         btBuscarEstoque.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -305,99 +320,122 @@ public class Dlg_Menu extends javax.swing.JDialog {
 
         panVenda.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        labTotalCarrinhoVenda.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
-        labTotalCarrinhoVenda.setText("TOTAL:");
-        panVenda.add(labTotalCarrinhoVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 260, -1, 30));
+        labTotalVenda.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
+        labTotalVenda.setText("TOTAL:");
+        panVenda.add(labTotalVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 260, -1, 30));
 
-        formatTotalCarrinhoVenda.setBorder(null);
-        formatTotalCarrinhoVenda.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
-        formatTotalCarrinhoVenda.addActionListener(new java.awt.event.ActionListener() {
+        formatTotalVenda.setEditable(false);
+        formatTotalVenda.setBorder(null);
+        formatTotalVenda.setForeground(new java.awt.Color(252, 1, 1));
+        formatTotalVenda.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        formatTotalVenda.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        formatTotalVenda.setText("0.0");
+        formatTotalVenda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                formatTotalCarrinhoVendaActionPerformed(evt);
+                formatTotalVendaActionPerformed(evt);
             }
         });
-        panVenda.add(formatTotalCarrinhoVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 260, 70, 30));
+        panVenda.add(formatTotalVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 260, 70, 30));
 
-        labNomeCarrinho.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
-        labNomeCarrinho.setText("Adicionar Produto:");
-        panVenda.add(labNomeCarrinho, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 60, -1, 30));
+        labNomeVenda.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
+        labNomeVenda.setText("Produto:");
+        panVenda.add(labNomeVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, -1, 30));
 
-        fieldNomeCarrinho.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fieldNomeCarrinhoActionPerformed(evt);
-            }
-        });
-        panVenda.add(fieldNomeCarrinho, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 60, 150, 30));
-
-        tableCarrinho.setModel(new javax.swing.table.DefaultTableModel(
+        tableVenda.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Produto", "Qt", "Preco"
+                "Produto", "Qt", "Preco Unitário", "Total"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.String.class, java.lang.Object.class, java.lang.Double.class, java.lang.Double.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, true, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
         });
-        scrolpanCarrinho.setViewportView(tableCarrinho);
+        scrolpanCarrinho.setViewportView(tableVenda);
 
         panVenda.add(scrolpanCarrinho, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, 610, 110));
 
-        labQtCarrinho.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
-        labQtCarrinho.setText("Quantidade:");
-        panVenda.add(labQtCarrinho, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 98, -1, 30));
+        labQtVenda.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
+        labQtVenda.setText("Quantidade:");
+        panVenda.add(labQtVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 50, -1, 30));
 
-        formatQtCarrinho.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0%"))));
-        panVenda.add(formatQtCarrinho, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 100, 50, 30));
-
-        btBuscarCarrinho.setText("Buscar");
-        btBuscarCarrinho.addActionListener(new java.awt.event.ActionListener() {
+        formatQtVenda.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        formatQtVenda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btBuscarCarrinhoActionPerformed(evt);
+                formatQtVendaActionPerformed(evt);
             }
         });
-        panVenda.add(btBuscarCarrinho, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 60, 80, 30));
+        panVenda.add(formatQtVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 50, 50, 30));
 
-        btAdicionarCarrinho.setText("Adicionar");
-        btAdicionarCarrinho.addActionListener(new java.awt.event.ActionListener() {
+        btEditarVenda.setMnemonic('A');
+        btEditarVenda.setText("Editar item venda");
+        btEditarVenda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btAdicionarCarrinhoActionPerformed(evt);
+                btEditarVendaActionPerformed(evt);
             }
         });
-        panVenda.add(btAdicionarCarrinho, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 100, 90, 30));
+        panVenda.add(btEditarVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 260, 210, 30));
 
-        btFinalizarCarrinho.setText("Finalizar");
-        btFinalizarCarrinho.addActionListener(new java.awt.event.ActionListener() {
+        btFinalizarVenda.setMnemonic('F');
+        btFinalizarVenda.setText("Finalizar");
+        btFinalizarVenda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btFinalizarCarrinhoActionPerformed(evt);
+                btFinalizarVendaActionPerformed(evt);
             }
         });
-        panVenda.add(btFinalizarCarrinho, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 260, 100, 30));
+        panVenda.add(btFinalizarVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 260, 100, 30));
 
-        btCancelarCarrinho.setText("Cancelar");
-        btCancelarCarrinho.addActionListener(new java.awt.event.ActionListener() {
+        btCancelarVenda.setMnemonic('C');
+        btCancelarVenda.setText("Cancelar");
+        btCancelarVenda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btCancelarCarrinhoActionPerformed(evt);
+                btCancelarVendaActionPerformed(evt);
             }
         });
-        panVenda.add(btCancelarCarrinho, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, 100, 30));
+        panVenda.add(btCancelarVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, 100, 30));
 
-        cbCliente.addActionListener(new java.awt.event.ActionListener() {
+        labVenda.setFont(new java.awt.Font("Agency FB", 1, 24)); // NOI18N
+        labVenda.setText("VENDA");
+        panVenda.add(labVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 10, -1, -1));
+
+        fieldNomeVenda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbClienteActionPerformed(evt);
+                fieldNomeVendaActionPerformed(evt);
             }
         });
-        panVenda.add(cbCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 260, 190, 30));
+        panVenda.add(fieldNomeVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 50, 140, 30));
 
-        labCarrinho1.setFont(new java.awt.Font("Agency FB", 1, 24)); // NOI18N
-        labCarrinho1.setText("CARRINHO");
-        panVenda.add(labCarrinho1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 10, -1, -1));
+        btBuscarProduto.setText("Buscar");
+        btBuscarProduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btBuscarProdutoActionPerformed(evt);
+            }
+        });
+        panVenda.add(btBuscarProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 50, 90, 30));
+
+        btAdicionarVenda.setBackground(new java.awt.Color(102, 204, 255));
+        btAdicionarVenda.setForeground(new java.awt.Color(255, 255, 255));
+        btAdicionarVenda.setMnemonic('A');
+        btAdicionarVenda.setText("Adicionar produto ao carrinho");
+        btAdicionarVenda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAdicionarVendaActionPerformed(evt);
+            }
+        });
+        panVenda.add(btAdicionarVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 100, 210, 30));
 
         tpanMenu.addTab("Vendas", panVenda);
 
@@ -451,9 +489,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
                     return;
                 }
                 
-            } catch (SQLException ex) {
-                Logger.getLogger(Dlg_Menu.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ClassNotFoundException ex) {
+            } catch (SQLException | ClassNotFoundException ex) {
                 Logger.getLogger(Dlg_Menu.class.getName()).log(Level.SEVERE, null, ex);
             }
             
@@ -469,7 +505,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
     private void btListarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btListarProdutoActionPerformed
         this.setVisible(false);
         try {
-            inter.abrirJanelaDlg_Listar_Produtos();
+            GerenciadorDeInterface.getInstance().abrirJanelaDlg_Listar_Produtos();
         } catch (NoSuchMethodException ex) {
             Logger.getLogger(Dlg_Menu.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -495,7 +531,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
             Produto produto = (Produto) produtos.get(0);
             if (produto != null) {
                 try {
-                    GerenciadorDeInterface.getInstance().getDominio().alterarQuantidadeProduto(produto, estoque);
+                    GerenciadorDeInterface.getInstance().getDominio().adicionarQuantidadeProduto(produto, estoque);
                     JOptionPane.showMessageDialog(this, "Estoque adicionado!", "Adicionar Estoque", JOptionPane.INFORMATION_MESSAGE);
                 } catch (HibernateException ex) {
                     JOptionPane.showMessageDialog(this, "Erro ao atualizar o estoque: " + ex.getMessage(), "ERRO: Adicionar Estoque", JOptionPane.ERROR_MESSAGE);
@@ -525,22 +561,130 @@ public class Dlg_Menu extends javax.swing.JDialog {
     }//GEN-LAST:event_formatCpfClienteActionPerformed
 
     private void btListarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btListarClienteActionPerformed
-        
         this.setVisible(false);
         try {
-            inter.abrirJanelaDlg_Listar_Clientes();
+            GerenciadorDeInterface.getInstance().abrirJanelaDlg_Listar_Clientes();
         } catch (NoSuchMethodException ex) {
             Logger.getLogger(Dlg_Menu.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }//GEN-LAST:event_btListarClienteActionPerformed
 
     private void btCancelarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelarClienteActionPerformed
         limparCamposCliente();
     }//GEN-LAST:event_btCancelarClienteActionPerformed
 
-    private void btAdicionarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAdicionarClienteActionPerformed
+    private void btCancelarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelarProdutoActionPerformed
+        limparCamposProduto();
+    }//GEN-LAST:event_btCancelarProdutoActionPerformed
 
+    private void fieldNomeEstoqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldNomeEstoqueActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fieldNomeEstoqueActionPerformed
+
+    private void btBuscarEstoqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarEstoqueActionPerformed
+
+        
+        
+    }//GEN-LAST:event_btBuscarEstoqueActionPerformed
+
+    private void btCancelarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelarVendaActionPerformed
+        if (vendaTableModel.getRowCount() == 0) {
+            mostrarMensagem("Não há nenhum produto na tabela!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            return; 
+        }
+        int confirmar = JOptionPane.showConfirmDialog(null, "Você tem certeza que deseja cancelar a venda? Todos os itens serão removidos.", "Confirmar Cancelamento", JOptionPane.YES_NO_OPTION);
+
+        if (confirmar == JOptionPane.YES_OPTION) {
+            vendaTableModel.limpar(); 
+            fieldNomeVenda.setText("");
+            formatQtVenda.setText("0");
+            formatTotalVenda.setText("0.00");
+            vendaAtual = null;
+            mostrarMensagem("Venda cancelada com sucesso.", "Informação", JOptionPane.INFORMATION_MESSAGE);
+        }
+        
+    }//GEN-LAST:event_btCancelarVendaActionPerformed
+
+    private void btFinalizarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFinalizarVendaActionPerformed
+
+        if (vendaTableModel.getRowCount() == 0) {
+            mostrarMensagem("Nenhum item na tabela de venda para finalizar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        Cliente clienteSelecionado = selecionarCliente();
+        if (clienteSelecionado == null) {
+            mostrarMensagem("Nenhum cliente selecionado.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        int confirmar = JOptionPane.showConfirmDialog(this, "Você tem certeza que deseja finalizar a venda?", "Confirmar Finalização", JOptionPane.YES_NO_OPTION);
+        if (confirmar == JOptionPane.YES_OPTION) {
+            double totalVenda = vendaTableModel.calcularTotal();
+
+            try {
+                GerenciadorDeInterface.getInstance().getDominio().inserirVenda(totalVenda, clienteSelecionado);
+
+                for (Item_Venda item : vendaTableModel.getListaItens()) {
+                    Produto produto = item.getProduto();
+                    int novaQuantidade = produto.getEstoque() - item.getQtProduto();
+                    produto.setEstoque(novaQuantidade);
+                }
+
+                mostrarMensagem("Venda finalizada com sucesso. Total: R$ " + String.format("%.2f", totalVenda), "Informação", JOptionPane.INFORMATION_MESSAGE);
+                limparCamposVenda();
+            } catch (Exception ex) {
+                mostrarErro("Erro ao finalizar a venda: " + ex.getMessage(), ex);
+            }
+        }  
+    }//GEN-LAST:event_btFinalizarVendaActionPerformed
+    
+    private Cliente selecionarCliente() {
+            List<Cliente> clientes;
+        try {
+            clientes = GerenciadorDeInterface.getInstance().getDominio().listar(Cliente.class);
+        } catch (ClassNotFoundException | SQLException ex) {
+            mostrarErro("Erro ao carregar clientes: " + ex.getMessage(), ex);
+            return null;
+        }
+
+        if (clientes.isEmpty()) {
+            mostrarMensagem("Nenhum cliente encontrado.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return null;
+        }
+
+        // Criação do JComboBox com os clientes
+        JComboBox<Cliente> cbClientes = new JComboBox<>(new DefaultComboBoxModel<>(clientes.toArray(new Cliente[0])));
+
+        int result = JOptionPane.showConfirmDialog(this, cbClientes, "Selecionar Cliente", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION) {
+            Cliente clienteSelecionado = (Cliente) cbClientes.getSelectedItem();
+            return clienteSelecionado;
+        } else {
+            mostrarMensagem("Nenhum cliente selecionado.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return null;
+        }
+    }
+    
+    private void formatTotalVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formatTotalVendaActionPerformed
+    }//GEN-LAST:event_formatTotalVendaActionPerformed
+
+    private void fieldQtEstoqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldQtEstoqueActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fieldQtEstoqueActionPerformed
+
+    private void formatQtProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formatQtProdutoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formatQtProdutoActionPerformed
+
+    private void btEditarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditarVendaActionPerformed
+
+    }//GEN-LAST:event_btEditarVendaActionPerformed
+
+    
+    private void btAdicionarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAdicionarClienteActionPerformed
+        
         if(validarCamposCliente()){
             String nome = fieldNomeCliente.getText();
             String cpf = formatCpfCliente.getText();
@@ -559,177 +703,192 @@ public class Dlg_Menu extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(this, "Erro nos dados: " + ex.getMessage(), "ERRO Cadastro Cliente", JOptionPane.ERROR_MESSAGE);
             }
         }
-        
     }//GEN-LAST:event_btAdicionarClienteActionPerformed
 
-    private void btCancelarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelarProdutoActionPerformed
-        limparCamposProduto();
-    }//GEN-LAST:event_btCancelarProdutoActionPerformed
-
-    private void fieldNomeEstoqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldNomeEstoqueActionPerformed
+    private void fieldNomeVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldNomeVendaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_fieldNomeEstoqueActionPerformed
+    }//GEN-LAST:event_fieldNomeVendaActionPerformed
 
-    private void btBuscarEstoqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarEstoqueActionPerformed
+    private void formatQtVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formatQtVendaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formatQtVendaActionPerformed
 
+    private void btBuscarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarProdutoActionPerformed
+        buscarProduto();
+    }//GEN-LAST:event_btBuscarProdutoActionPerformed
 
+    private void buscarProduto(){
+    
+        try {
+            List<Produto> produtosFiltrados = new ArrayList<>();
+            String pesquisa = fieldNomeVenda.getText().trim();
 
+            List<Produto> produtos = GerenciadorDeInterface.getInstance().getDominio().listar(Produto.class);
+            for (Produto produto : produtos) {
+                if (produto.getNome().toLowerCase().contains(pesquisa.toLowerCase()) ||
+                    produto.getCategoria().toLowerCase().contains(pesquisa.toLowerCase()) ||
+                    String.valueOf(produto.getTam_pes()).contains(pesquisa) ||
+                    produto.getUnidMedida().toLowerCase().contains(pesquisa.toLowerCase()) ||
+                    String.valueOf(produto.getValor()).contains(pesquisa) ||
+                    String.valueOf(produto.getEstoque()).contains(pesquisa) ||
+                    String.valueOf(produto.getIdProduto()).contains(pesquisa)) {
 
-
-
-        
-    }//GEN-LAST:event_btBuscarEstoqueActionPerformed
-
-    private void btBuscarCarrinhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarCarrinhoActionPerformed
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    }//GEN-LAST:event_btBuscarCarrinhoActionPerformed
-
-    private void btCancelarCarrinhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelarCarrinhoActionPerformed
-        if (!validarTabelaVenda()) {
-            JOptionPane.showMessageDialog(this, "Não há produtos no carrinho.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            int opcao = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja limpar o carrinho?", "Confirmação", JOptionPane.YES_NO_OPTION);
-            if (opcao == JOptionPane.YES_OPTION) {
-                limparTabelaVenda();
-            }
-        }
-    }//GEN-LAST:event_btCancelarCarrinhoActionPerformed
-
-    private void btFinalizarCarrinhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFinalizarCarrinhoActionPerformed
-        if(validarTabelaVenda()){
-            if(vendaAtual != null){
-                try{
-                    GerenciadorDeInterface.getInstance().getDominio().inserirVendas(vendaAtual.getTotalVenda(),vendaAtual.getCliente());
-                    for(int i = 0; i < tableCarrinho.getRowCount(); i++){
-                        Produto produto = (Produto) tableCarrinho.getValueAt(i,0);
-                        int quantidade = (int) tableCarrinho.getValueAt(i, 1);
-                        double preco = (double) tableCarrinho.getValueAt(i, 2);
-                        double desconto = (double) tableCarrinho.getValueAt(i, 3);
-                        
-                        Item_Venda item_venda = new Item_Venda(produto, vendaAtual, quantidade, desconto);
-                        GerenciadorDeInterface.getInstance().getDominio().inserirItemVenda(produto, vendaAtual, quantidade, preco, desconto);
-                    }
-                }catch (HibernateException ex) {
-                    JOptionPane.showMessageDialog(this, "Erro ao finalizar venda: " + ex.getMessage(), "ERRO: Finalizar Venda", JOptionPane.ERROR_MESSAGE);
+                    produtosFiltrados.add(produto);
                 }
-            } else {
-                JOptionPane.showMessageDialog(this, "Não há venda para ser finalizada.", "Erro: Finalizar Venda", JOptionPane.ERROR_MESSAGE);
-            }            
-            JOptionPane.showMessageDialog(this, "Carrinho finalizado com sucesso!", "Finalizar Carrinho", JOptionPane.INFORMATION_MESSAGE);
-            limparTabelaVenda();
-        }else{
-            JOptionPane.showMessageDialog(this, "Adicione pelo menos um produto ao carrinho.", "Erro: Venda",JOptionPane.ERROR_MESSAGE);
-
-        }
-    }//GEN-LAST:event_btFinalizarCarrinhoActionPerformed
-
-    private void formatTotalCarrinhoVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formatTotalCarrinhoVendaActionPerformed
-        double total = 0.0;
-        List<Item_Venda> itensVenda = (List<Item_Venda>) vendaAtual.getItemVenda(); 
-
-        if (itensVenda != null) {
-            for (Item_Venda item : itensVenda) {
-                total += item.getProduto().getValor() * item.getQtProduto() * (1 - item.getDesconto());
             }
+            
+            if (produtosFiltrados.isEmpty()) {
+                mostrarMensagem("Nenhum produto encontrado com os critérios de busca.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                fieldNomeVenda.setText("");
+            } else if (produtosFiltrados.size() == 1) {
+                Produto produto = produtosFiltrados.get(0);
+                fieldNomeVenda.setText(produto.getNome());
+                produtoSelecionado = produto; // Armazenar o produto selecionado para uso posterior
+            } else {
+                // Mais de um produto encontrado, pedir seleção ao usuário
+                Produto[] produtosArray = produtosFiltrados.toArray(Produto[]::new);
+                Produto produtoSelecionado2 = (Produto) JOptionPane.showInputDialog(null,
+                        "Vários produtos encontrados. Selecione um:",
+                        "Seleção de Produto",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        produtosArray,
+                        produtosArray[0]);
+
+                if (produtoSelecionado2 != null) {
+                    fieldNomeVenda.setText(produtoSelecionado2.getNome());
+                    this.produtoSelecionado = produtoSelecionado2; // Armazenar o produto selecionado para uso posterior
+                } else {
+                    mostrarMensagem("Nenhum produto selecionado.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Dlg_Menu.class.getName()).log(Level.SEVERE, null, ex);
         }
-        formatTotalCarrinhoVenda.setText(String.format("%.2f", total));
-    }//GEN-LAST:event_formatTotalCarrinhoVendaActionPerformed
+    }
+    
+    private void btAdicionarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAdicionarVendaActionPerformed
 
-    private void cbClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbClienteActionPerformed
-        
-    }//GEN-LAST:event_cbClienteActionPerformed
+        // Inicializa a venda atual se for nula
+        if (vendaAtual == null) {
+            vendaAtual = new Venda();
+            vendaAtual.setItem_venda(new ArrayList<>());
+        }
 
-    private void fieldQtEstoqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldQtEstoqueActionPerformed
+        // Busca o produto selecionado
+        buscarProduto();
+        if (produtoSelecionado == null) {
+            mostrarMensagem("Nenhum produto selecionado.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int quantidade;
+        try {
+            // Tenta parsear a quantidade informada pelo usuário
+            quantidade = Integer.parseInt(formatQtVenda.getText().trim());
+            if (quantidade <= 0) {
+                mostrarMensagem("A quantidade deve ser maior que zero.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Verifica a quantidade em estoque do produto
+            if (produtoSelecionado.getEstoque() <= 0) {
+                mostrarMensagem("Produto fora de estoque.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                return;
+            } else if (quantidade > produtoSelecionado.getEstoque()) {
+                mostrarMensagem("Quantidade solicitada (" + quantidade + ") excede o estoque disponível (" + produtoSelecionado.getEstoque() + ").", "Aviso", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        } catch (NumberFormatException ex) {
+            mostrarMensagem("Quantidade inválida.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            // Adiciona o item temporário à venda
+            GerenciadorDeInterface.getInstance().getDominio().adicionarItemVendaTemp(produtoSelecionado, quantidade);
+        } catch (Exception ex) {
+            mostrarMensagem("Erro ao adicionar produto à venda: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Atualiza a tabela de itens de venda e o total da venda
+        calcularTotalVenda();
+        atualizarTabelaItensVenda();
+
+        // Limpa os campos de entrada
+        formatQtVenda.setText("0");
+        fieldNomeVenda.setText("");
+    }//GEN-LAST:event_btAdicionarVendaActionPerformed
+
+    private void atualizarTabelaItensVenda() {
+        List<Item_Venda> itensVenda = GerenciadorDeInterface.getInstance().getDominio().getItensVendaTemp();
+        vendaTableModel.setLista(itensVenda);
+        vendaTableModel.fireTableDataChanged();
+    }
+    
+    private void cbCategoriaProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCategoriaProdutoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_fieldQtEstoqueActionPerformed
-
-    private void formatQtProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formatQtProdutoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_formatQtProdutoActionPerformed
-
-    private void fieldNomeCarrinhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldNomeCarrinhoActionPerformed
-        
-        
-        
-        
-    }//GEN-LAST:event_fieldNomeCarrinhoActionPerformed
-
-    private void btAdicionarCarrinhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAdicionarCarrinhoActionPerformed
-        
-        
-        
-        
-        
-        
-        
-    }//GEN-LAST:event_btAdicionarCarrinhoActionPerformed
-
+    }//GEN-LAST:event_cbCategoriaProdutoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btAdicionarCarrinho;
     private javax.swing.JButton btAdicionarCliente;
     private javax.swing.JButton btAdicionarEstoque;
     private javax.swing.JButton btAdicionarProduto;
-    private javax.swing.JToggleButton btBuscarCarrinho;
+    private javax.swing.JButton btAdicionarVenda;
     private javax.swing.JButton btBuscarEstoque;
-    private javax.swing.JButton btCancelarCarrinho;
+    private javax.swing.JButton btBuscarProduto;
     private javax.swing.JButton btCancelarCliente;
     private javax.swing.JButton btCancelarEstoque;
     private javax.swing.JButton btCancelarProduto;
+    private javax.swing.JButton btCancelarVenda;
+    private javax.swing.JButton btEditarVenda;
     private javax.swing.JToggleButton btEncerrar;
-    private javax.swing.JButton btFinalizarCarrinho;
+    private javax.swing.JButton btFinalizarVenda;
     private javax.swing.JButton btListarCliente;
     private javax.swing.JButton btListarProduto;
     private javax.swing.JComboBox<String> cbCategoriaProduto;
-    private javax.swing.JComboBox<String> cbCliente;
     private javax.swing.JComboBox<String> cbUnidadeMedidaProduto;
-    private javax.swing.JTextField fieldNomeCarrinho;
     private javax.swing.JTextField fieldNomeCliente;
     private javax.swing.JTextField fieldNomeEstoque;
     private javax.swing.JTextField fieldNomeProduto;
+    private javax.swing.JTextField fieldNomeVenda;
     private javax.swing.JFormattedTextField fieldQtEstoque;
     private javax.swing.JFormattedTextField formatCpfCliente;
     private javax.swing.JFormattedTextField formatPrecoProduto;
-    private javax.swing.JFormattedTextField formatQtCarrinho;
     private javax.swing.JFormattedTextField formatQtProduto;
+    private javax.swing.JFormattedTextField formatQtVenda;
     private javax.swing.JFormattedTextField formatTamProduto;
     private javax.swing.JFormattedTextField formatTelefoneCliente;
-    private javax.swing.JFormattedTextField formatTotalCarrinhoVenda;
+    private javax.swing.JFormattedTextField formatTotalVenda;
     private javax.swing.JLabel labAdicionarEstoque;
     private javax.swing.JLabel labCadastrarProduto;
     private javax.swing.JLabel labCadastroCliente;
-    private javax.swing.JLabel labCarrinho1;
     private javax.swing.JLabel labCpfCliente;
     private javax.swing.JLabel labImagemFundo;
-    private javax.swing.JLabel labNomeCarrinho;
     private javax.swing.JLabel labNomeCliente;
     private javax.swing.JLabel labNomeEstoque;
     private javax.swing.JLabel labNomeProduto;
+    private javax.swing.JLabel labNomeVenda;
     private javax.swing.JLabel labPrecoProduto;
-    private javax.swing.JLabel labQtCarrinho;
     private javax.swing.JLabel labQtEstoque;
     private javax.swing.JLabel labQtEstoqueProduto;
+    private javax.swing.JLabel labQtVenda;
     private javax.swing.JLabel labTamProduto;
     private javax.swing.JLabel labTelefoneCliente;
-    private javax.swing.JLabel labTotalCarrinhoVenda;
+    private javax.swing.JLabel labTotalVenda;
+    private javax.swing.JLabel labVenda;
     private javax.swing.JPanel panCadastrarProduto;
     private javax.swing.JPanel panClientes;
     private javax.swing.JPanel panControleEstoque;
     private javax.swing.JTabbedPane panProduto;
     private javax.swing.JPanel panVenda;
     private javax.swing.JScrollPane scrolpanCarrinho;
-    private javax.swing.JTable tableCarrinho;
+    private javax.swing.JTable tableVenda;
     private javax.swing.JTabbedPane tpanMenu;
     // End of variables declaration//GEN-END:variables
     
+    /* VALIDAR */
     private boolean validarCamposProduto() {
         String msgErro = "";
         
@@ -801,37 +960,6 @@ public class Dlg_Menu extends javax.swing.JDialog {
         }
     }
     
-    private boolean validarCamposVenda() {
-        String msgErro = "";
-        
-        labNomeCarrinho.setForeground(Color.black);
-        labQtCarrinho.setForeground(Color.black);        
-        
-        if(fieldNomeCarrinho.getText().isEmpty()){
-            msgErro = msgErro + "Adicione um produto.\n";
-            labNomeCarrinho.setForeground(Color.red);
-        }
-        
-        if(formatQtCarrinho.getValue() == null){
-            msgErro = msgErro + "Adicione uma quantidade.\n";
-            labQtCarrinho.setForeground(Color.red);
-        }
-        
-        if ( msgErro.isEmpty() ) {
-            return true;
-        } else {            
-            JOptionPane.showMessageDialog(this, msgErro, "ERRO Venda", 
-                    JOptionPane.ERROR_MESSAGE);
-            return false;
-        }        
-    }
-    
-    public boolean validarTabelaVenda(){
-        if(tableCarrinho.getRowCount() == 0){
-            return false;
-        }  
-        return true;
-    }
     
     /* LAB BLACK */
     
@@ -856,12 +984,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
         fieldNomeCliente.setText("");      
         formatTelefoneCliente.setText("");
     }
-    
-    public void limparCamposVenda(){
-        fieldNomeCarrinho.setText("");
-        formatQtCarrinho.setText("");
-    }
-    
+        
     public void limparCamposProduto(){
         fieldNomeProduto.setText("");
         fieldNomeProduto.setText("");
@@ -870,21 +993,18 @@ public class Dlg_Menu extends javax.swing.JDialog {
         formatTamProduto.setText("");
         cbUnidadeMedidaProduto.setSelectedIndex(0);
         cbCategoriaProduto.setSelectedIndex(0);
-    }
-    
-    public void limparTabelaVenda(){
-        DefaultTableModel model = (DefaultTableModel) tableCarrinho.getModel();
-        model.setRowCount(0);
     }    
     
-    public void atualizarComboBoxCliente() throws ClassNotFoundException, SQLException{
-        List<Cliente> clientes = GerenciadorDeInterface.getInstance().getDominio().listar(Cliente.class);        
-        cbCliente.removeAllItems();
-        for (Cliente cliente : clientes) {
-            cbCliente.addItem(cliente.getNome() + " - " + cliente.getCpf());
-        }        
+    private void limparCamposVenda() {
+        vendaTableModel.limpar(); 
+        fieldNomeVenda.setText("");
+        formatQtVenda.setText("0");
+        formatTotalVenda.setText("0,00");
+        vendaAtual = null;
     }
-
+    
+    /* CLIENTE */
+    
     private boolean validarCpfUnico(String cpf) {
         try {
             List<Object> cpfExistente = GerenciadorDeInterface.getInstance().getDominio().pesquisarCliente(cpf, 2);
@@ -892,11 +1012,34 @@ public class Dlg_Menu extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(this, "Cliente com o CPF " + cpf + " já existe.", "ERRO: Adicionar Cliente", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(Dlg_Menu.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(Dlg_Menu.class.getName()).log(Level.SEVERE, null, ex);
         }
         return true;
+    }
+    
+    
+    /* AUXILIARES  */
+
+    private void mostrarMensagem(String mensagem, String titulo, int tipo) {
+        JOptionPane.showMessageDialog(this, mensagem, titulo, tipo);
+    }
+
+    private void mostrarErro(String mensagem, Exception ex) {
+        Logger.getLogger(Dlg_Listar_Clientes.class.getName()).log(Level.SEVERE, mensagem, ex);
+        mostrarMensagem(mensagem, "Erro", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    /* VENDA*/
+    
+    private void calcularTotalVenda() {        
+        double total = 0.0;
+        List<Item_Venda> itensVenda = vendaAtual.getItem_venda(); 
+        if (itensVenda != null) {
+            for (Item_Venda item : itensVenda) {
+                total += item.getProduto().getValor() * item.getQtProduto();
+            }
+        }
+        formatTotalVenda.setText(String.format("%.2f", total));
     }
 }

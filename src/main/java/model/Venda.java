@@ -2,7 +2,6 @@ package model;
 
 import java.io.Serializable;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,10 +28,10 @@ public class Venda implements Serializable {
     private double totalVenda;
     
     @ManyToOne
-    @JoinColumn(name="idCliente")
+    @JoinColumn(name = "idCliente", nullable = false)
     private Cliente cliente;
-        
-    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL)
+    
+    @OneToMany(mappedBy = "venda")
     private List<Item_Venda> item_venda;
 
     public Venda() {
@@ -66,13 +65,14 @@ public class Venda implements Serializable {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }        
+
+    public List<Item_Venda> getItem_venda() {
+        return item_venda;
     }
 
-    public Item_Venda getItemVenda() {
-        return (Item_Venda) item_venda;
-    }
-
-    public void setItemVenda(Item_Venda itemVenda) {
+    public void setItem_venda(List<Item_Venda> item_venda) {
         this.item_venda = item_venda;
-    }    
+    }   
+    
 }

@@ -14,7 +14,6 @@ public class GerenciadorDeInterface {
     private Main_Frame main_frame = null;
     private Dlg_Listar_Clientes dlg_listar_clientes = null;
     private Dlg_Listar_Produtos dlg_listar_produtos = null;
-    private Dlg_Buscar_Produto dlg_buscar_produto = null;
     private Dlg_Menu dlg_menu = null;
     
     private GerenciadorDeDominio dominio;
@@ -51,7 +50,7 @@ public class GerenciadorDeInterface {
     private JDialog abrirJanela(java.awt.Frame parent, JDialog dlg, Class classe) throws NoSuchMethodException {
         if (dlg == null || !dlg.isVisible()){     
             try {
-                dlg = (JDialog) classe.getConstructor(Frame.class, boolean.class, GerenciadorDeInterface.class).newInstance(parent,true, myInstance);
+                dlg = (JDialog) classe.getConstructor(Frame.class, boolean.class).newInstance(parent,true);
             } catch ( NoSuchMethodException ex) {
                 throw ex;                
             } catch (IllegalAccessException | IllegalArgumentException | InstantiationException | SecurityException | InvocationTargetException ex) {
@@ -85,10 +84,6 @@ public class GerenciadorDeInterface {
     
     public void abrirJanelaDlg_Listar_Produtos() throws NoSuchMethodException{
         abrirJanela(main_frame, dlg_listar_produtos, Dlg_Listar_Produtos.class);
-    }
-    
-    public void abrirJanelaDlg_Buscar_Produto() throws NoSuchMethodException{
-        abrirJanela(main_frame, dlg_buscar_produto, Dlg_Buscar_Produto.class);
     }
     
     /*             MAIN              */

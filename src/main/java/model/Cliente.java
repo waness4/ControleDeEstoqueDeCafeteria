@@ -1,11 +1,15 @@
 package model;
 
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -28,6 +32,9 @@ public class Cliente implements Serializable{
     
     @Column (name= "tel", unique = true, length = 15)
     private String tel;
+    
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
+    private List<Venda> venda;
 
     public Cliente(int idCliente, String nome, String cpf, String tel) {
         this.idCliente = idCliente;
@@ -76,4 +83,19 @@ public class Cliente implements Serializable{
     public void setTel(String tel) {
         this.tel = tel;
     }
+
+    public List<Venda> getVenda() {
+        return venda;
+    }
+
+    public void setVenda(List<Venda> venda) {
+        this.venda = venda;
+    }
+
+    @Override
+    public String toString() {
+        return this.getNome() + " - " + this.getCpf();
+    }
+    
+    
 }

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package view;
 
 import control.GerenciadorDeInterface;
@@ -22,6 +18,10 @@ public class Main_Frame extends javax.swing.JFrame {
      */
     public Main_Frame(GerenciadorDeInterface newGInterface) {
         inter = newGInterface;
+        initComponents();
+    }
+
+    public Main_Frame() {
         initComponents();
     }
 
@@ -68,7 +68,6 @@ public class Main_Frame extends javax.swing.JFrame {
     }//GEN-LAST:event_btIniciarMouseClicked
 
     private void btIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btIniciarActionPerformed
-        //Torna o Main_Frame invisivel
         this.setVisible(false);
 
         try {

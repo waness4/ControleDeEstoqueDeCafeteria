@@ -25,15 +25,12 @@ import org.hibernate.HibernateException;
  */
 public class Dlg_Listar_Produtos extends javax.swing.JDialog {
 
-    
-    private GerenciadorDeInterface inter; 
     private ProdutoAbstractTableModel proTableModel;
     private Produto proSelecionado = null;
     
-    public Dlg_Listar_Produtos(java.awt.Frame parent, boolean modal, GerenciadorDeInterface inter) {
+    public Dlg_Listar_Produtos(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        this.inter = inter;
         proTableModel = new ProdutoAbstractTableModel();
         tbListarProduto.setModel((TableModel) proTableModel);
         atualizarTabelaProduto();
@@ -75,6 +72,12 @@ public class Dlg_Listar_Produtos extends javax.swing.JDialog {
             }
         });
         getContentPane().add(btVoltarListarProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 90, 70, 30));
+
+        fieldListarProdutos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldListarProdutosActionPerformed(evt);
+            }
+        });
         getContentPane().add(fieldListarProdutos, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 90, 220, 30));
 
         btPesquisarConsultarCliente.setText("Buscar");
@@ -157,9 +160,9 @@ public class Dlg_Listar_Produtos extends javax.swing.JDialog {
     private void btVoltarListarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btVoltarListarProdutoActionPerformed
         this.setVisible(false);
         try {
-            inter.abrirJanelaDlg_Menu();
+            GerenciadorDeInterface.getInstance().abrirJanelaDlg_Menu();
         } catch (NoSuchMethodException ex) {
-            Logger.getLogger(Main_Frame.class.getName()).log(Level.SEVERE, null, ex);
+            mostrarErro("Erro ao abrir o menu principal", ex);
         }
     }//GEN-LAST:event_btVoltarListarProdutoActionPerformed
 
@@ -167,26 +170,30 @@ public class Dlg_Listar_Produtos extends javax.swing.JDialog {
     
         int selectedRow = tbListarProduto.getSelectedRow();
         if (selectedRow < 0) {
-            JOptionPane.showMessageDialog(this, "Selecione um produto.", "ERRO: Excluir Produto", JOptionPane.ERROR_MESSAGE);
+            mostrarMensagem("Selecione um produto.", "ERRO: Excluir Produto", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         Produto produto = proTableModel.getProduto(selectedRow);
         int confirm = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja excluir o produto " + produto.getNome() + "?", "Excluir Produto", JOptionPane.YES_NO_OPTION);
-    
+
         if (confirm == JOptionPane.YES_OPTION) {
-            try {
-                GerenciadorDeInterface.getInstance().getDominio().excluirProduto(produto);
-                atualizarTabelaProduto();
-                JOptionPane.showMessageDialog(this, "Produto excluído com sucesso.", "Excluir Produto", JOptionPane.INFORMATION_MESSAGE);
-                setFalseButton();
-            } catch (HibernateException ex) {
-                JOptionPane.showMessageDialog(this, "Erro ao excluir produto: " + ex.getMessage(), "ERRO: Excluir Produto", JOptionPane.ERROR_MESSAGE);
-            }
+            excluirProduto(produto);
         }
         
     }//GEN-LAST:event_btExcluirProdutoActionPerformed
 
+    private void excluirProduto(Produto produto) {
+        try {
+            GerenciadorDeInterface.getInstance().getDominio().excluirProduto(produto);
+            atualizarTabelaProduto();
+            mostrarMensagem("Produto excluído com sucesso.", "Excluir Produto", JOptionPane.INFORMATION_MESSAGE);
+            setFalseButton();
+        } catch (HibernateException ex) {
+            mostrarErro("Erro ao excluir produto: " + ex.getMessage(), ex);
+        }
+    }
+    
     private void btCancelarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelarProdutoActionPerformed
         setFalseButton();
     }//GEN-LAST:event_btCancelarProdutoActionPerformed
@@ -195,12 +202,16 @@ public class Dlg_Listar_Produtos extends javax.swing.JDialog {
     
         int selectedRow = tbListarProduto.getSelectedRow();
         if (selectedRow < 0) {
-            JOptionPane.showMessageDialog(this, "Selecione um produto.", "ERRO: Alterar Produto", JOptionPane.ERROR_MESSAGE);
+            mostrarMensagem("Selecione um produto.", "ERRO: Alterar Produto", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         Produto produto = proTableModel.getProduto(selectedRow);
+        alterarProduto(produto);
         
+    }//GEN-LAST:event_btAlterarProdutoActionPerformed
+
+    private void alterarProduto(Produto produto) {
         JTextField nomeField = new JTextField(produto.getNome());
         JTextField tamPesoField = new JTextField(String.valueOf(produto.getTam_pes()));
         JTextField valorField = new JTextField(String.valueOf(produto.getValor()));
@@ -222,103 +233,130 @@ public class Dlg_Listar_Produtos extends javax.swing.JDialog {
         panel.add(valorField);
         panel.add(new JLabel("Quantidade em Estoque:"));
         panel.add(qtEstoqueField);
-        
+
         int result = JOptionPane.showConfirmDialog(null, panel, "Alterar Produto", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
-            String novoNome = nomeField.getText();
-            String novaCategoria = (String) categoriaComboBox.getSelectedItem();
-            double novoTamPeso = Double.parseDouble(tamPesoField.getText());
-            String novaUnidadeMedida = (String) unidadeMedidaComboBox.getSelectedItem();
-            double novoValor = Double.parseDouble(valorField.getText());
-            int novaQtEstoque = Integer.parseInt(qtEstoqueField.getText());
+            if (camposValidos(nomeField, tamPesoField, valorField, qtEstoqueField)) {
+                try {
+                    String novoNome = nomeField.getText();
+                    String novaCategoria = (String) categoriaComboBox.getSelectedItem();
+                    double novoTamPeso = Double.parseDouble(tamPesoField.getText());
+                    String novaUnidadeMedida = (String) unidadeMedidaComboBox.getSelectedItem();
+                    double novoValor = Double.parseDouble(valorField.getText());
+                    int novaQtEstoque = Integer.parseInt(qtEstoqueField.getText());
 
-            if (!novoNome.isEmpty() && !novaCategoria.isEmpty() && novoTamPeso > 0 && !novaUnidadeMedida.isEmpty() && novoValor > 0 && novaQtEstoque >= 0) {
-                GerenciadorDeInterface.getInstance().getDominio().alterarProduto(produto, novoNome, novoValor, novoTamPeso, novaUnidadeMedida, novaCategoria, novaQtEstoque);
-                atualizarTabelaProduto();
-                JOptionPane.showMessageDialog(this, "Produto alterado com sucesso.", "Alterar Produto", JOptionPane.INFORMATION_MESSAGE);
-                setFalseButton();
+                    GerenciadorDeInterface.getInstance().getDominio().alterarProduto(produto, novoNome, novoValor, novoTamPeso, novaUnidadeMedida, novaCategoria, novaQtEstoque);
+                    atualizarTabelaProduto();
+                    mostrarMensagem("Produto alterado com sucesso.", "Alterar Produto", JOptionPane.INFORMATION_MESSAGE);
+                    setFalseButton();
+                } catch (NumberFormatException | HibernateException ex) {
+                    mostrarErro("Erro ao alterar produto: " + ex.getMessage(), ex);
+                }
             } else {
-                JOptionPane.showMessageDialog(this, "Todos os campos devem ser preenchidos corretamente.", "ERRO: Alterar Produto", JOptionPane.ERROR_MESSAGE);
+                mostrarMensagem("Todos os campos devem ser preenchidos corretamente.", "ERRO: Alterar Produto", JOptionPane.ERROR_MESSAGE);
             }
         }
-    }//GEN-LAST:event_btAlterarProdutoActionPerformed
-
+    }
+    
+    private boolean camposValidos(JTextField... campos) {
+        for (JTextField campo : campos) {
+            if (campo.getText().trim().isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
     private void btPesquisarConsultarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPesquisarConsultarClienteActionPerformed
 
         if (campoBuscaVazio()) {
-            JOptionPane.showMessageDialog(this, "Digite algo para buscar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            mostrarMensagem("Digite algo para buscar.", "Aviso", JOptionPane.WARNING_MESSAGE);
             atualizarTabelaProduto();
             return;
         }
+        buscarProduto(fieldListarProdutos.getText().trim());
+        
+    }//GEN-LAST:event_btPesquisarConsultarClienteActionPerformed
 
-        String pesquisa = fieldListarProdutos.getText().trim();
+    private void fieldListarProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldListarProdutosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fieldListarProdutosActionPerformed
 
+    private void buscarProduto(String pesquisa) {
         try {
             List<Produto> produtosFiltrados = new ArrayList<>();
             List<Produto> produtos = GerenciadorDeInterface.getInstance().getDominio().listar(Produto.class);
             for (Produto produto : produtos) {
                 if (produto.getNome().toLowerCase().contains(pesquisa.toLowerCase()) ||
-                    produto.getCategoria().toLowerCase().contains(pesquisa.toLowerCase()) ||
-                    String.valueOf(produto.getTam_pes()).contains(pesquisa) ||
-                    produto.getUnidMedida().toLowerCase().contains(pesquisa.toLowerCase()) ||
-                    String.valueOf(produto.getValor()).contains(pesquisa) ||
-                    String.valueOf(produto.getEstoque()).contains(pesquisa) ||
-                    String.valueOf(produto.getIdProduto()).contains(pesquisa)) {
+                        produto.getCategoria().toLowerCase().contains(pesquisa.toLowerCase()) ||
+                        String.valueOf(produto.getTam_pes()).contains(pesquisa) ||
+                        produto.getUnidMedida().toLowerCase().contains(pesquisa.toLowerCase()) ||
+                        String.valueOf(produto.getValor()).contains(pesquisa) ||
+                        String.valueOf(produto.getEstoque()).contains(pesquisa) ||
+                        String.valueOf(produto.getIdProduto()).contains(pesquisa)) {
 
                     produtosFiltrados.add(produto);
                 }
             }
 
             if (produtosFiltrados.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Nenhum produto encontrado com os critérios de busca.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                mostrarMensagem("Nenhum produto encontrado com os critérios de busca.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
                 fieldListarProdutos.setText("");
                 atualizarTabelaProduto();
             } else {
                 proTableModel.setLista(produtosFiltrados);
             }
         } catch (ClassNotFoundException | SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Erro ao buscar produtos: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-        }
-        
-    }//GEN-LAST:event_btPesquisarConsultarClienteActionPerformed
-
-    private void atualizarTabelaProduto() {
-        try {
-            List<Produto> produto = GerenciadorDeInterface.getInstance().getDominio().listar(Produto.class);
-            Collections.sort(produto, Comparator.comparingInt(Produto::getIdProduto));  
-            proTableModel.setLista(produto);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar produtos: " + ex.getMessage(), "ERRO: Atualizar Lista Produtos", JOptionPane.ERROR_MESSAGE);
+            mostrarErro("Erro ao buscar produtos: " + ex.getMessage(), ex);
         }
     }
     
-    private void setTrueButton(){
+    private void atualizarTabelaProduto() {
+        try {
+            List<Produto> produtos = GerenciadorDeInterface.getInstance().getDominio().listar(Produto.class);
+            Collections.sort(produtos, Comparator.comparingInt(Produto::getIdProduto));
+            proTableModel.setLista(produtos);
+        } catch (ClassNotFoundException | SQLException ex) {
+            mostrarErro("Erro ao carregar produtos: " + ex.getMessage(), ex);
+        }
+    }
+
+    private void setTrueButton() {
         btSelecionarProduto.setVisible(false);
-        tbListarProduto.setEnabled(false);        
+        tbListarProduto.setEnabled(false);
         btExcluirProduto.setVisible(true);
         btCancelarProduto.setVisible(true);
         btAlterarProduto.setVisible(true);
     }
-    
-    private void setFalseButton(){
-        btSelecionarProduto.setVisible(true);  
+
+    private void setFalseButton() {
+        btSelecionarProduto.setVisible(true);
         tbListarProduto.setEnabled(true);
         btExcluirProduto.setVisible(false);
         btCancelarProduto.setVisible(false);
-        btAlterarProduto.setVisible(false);        
+        btAlterarProduto.setVisible(false);
     }
-    
+
     private String[] getCategoria() {
-        return new String[] {"Café", "Chá", "Bebida", "Salgado", "Bolo", "Pão"};
+        return new String[]{"Café", "Chá", "Bebida", "Salgado", "Bolo", "Pão"};
     }
 
     private String[] getUnidMedida() {
-        return new String[] {"g", "kg", "ml"};
+        return new String[]{"g", "kg", "ml"};
     }
-    
+
     private boolean campoBuscaVazio() {
         return fieldListarProdutos.getText().trim().isEmpty();
+    }
+
+    private void mostrarMensagem(String mensagem, String titulo, int tipo) {
+        JOptionPane.showMessageDialog(this, mensagem, titulo, tipo);
+    }
+
+    private void mostrarErro(String mensagem, Exception ex) {
+        Logger.getLogger(Dlg_Listar_Produtos.class.getName()).log(Level.SEVERE, mensagem, ex);
+        mostrarMensagem(mensagem, "Erro", JOptionPane.ERROR_MESSAGE);
     }
     
 

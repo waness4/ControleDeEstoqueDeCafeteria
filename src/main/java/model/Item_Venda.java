@@ -1,6 +1,7 @@
 package model;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,36 +23,31 @@ public class Item_Venda implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idItem_venda;
     
-    @ManyToOne
-    @JoinColumn(name="idProduto")
+     @ManyToOne
+    @JoinColumn(name = "idProduto", nullable = false)
     private Produto produto;
-    
+
     @ManyToOne
-    @JoinColumn(name="idVenda")
+    @JoinColumn(name = "idVenda", nullable = false)
     private Venda venda;
-    
-    @JoinColumn(name="qtProduto")
+
+    @Column(name = "qtProduto", nullable = false)
     private int qtProduto;
-    
-    @JoinColumn(name="desconto")
-    private double desconto;
 
     public Item_Venda() {
     }
     
-    public Item_Venda(int idItemVenda, Produto produto, Venda venda, int qtProduto, double desconto) {
+    public Item_Venda(int idItemVenda, Produto produto, Venda venda, int qtProduto) {
         this.idItem_venda = idItemVenda;
         this.produto = produto;
         this.venda = venda;
         this.qtProduto = qtProduto;
-        this.desconto = desconto;
     }
 
-    public Item_Venda(Produto produto, Venda venda, int qtProduto, double desconto) {
+    public Item_Venda(Produto produto, Venda venda, int qtProduto) {
         this.produto = produto;
         this.venda = venda;
         this.qtProduto = qtProduto;
-        this.desconto = desconto;
     }
     
     public int getIdItem_venda() {
@@ -84,13 +80,5 @@ public class Item_Venda implements Serializable {
 
     public void setQtProduto(int qtProduto) {
         this.qtProduto = qtProduto;
-    }
-
-    public double getDesconto() {
-        return desconto;
-    }
-
-    public void setDesconto(double desconto) {
-        this.desconto = desconto;
-    }
+    }    
 }

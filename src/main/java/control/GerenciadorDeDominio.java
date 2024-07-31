@@ -3,6 +3,7 @@ package control;
 import dao.ConexaoHibernate;
 import dao.GenericDAO;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import model.Cliente;
 import model.Item_Venda;
@@ -17,7 +18,8 @@ import org.hibernate.criterion.Restrictions;
  */
 public class GerenciadorDeDominio {
     
-    private GenericDAO genDAO; 
+    private GenericDAO genDAO;     
+    private List<Item_Venda> itensVendaTemp;
     
     public GerenciadorDeDominio() throws ClassNotFoundException{
         ConexaoHibernate.getSessionFactory();
@@ -118,10 +120,17 @@ public class GerenciadorDeDominio {
         genDAO.alterar(produto);
     }
     
-    public void alterarQuantidadeProduto(
+    public void adicionarQuantidadeProduto(
             Produto produto, 
             int estoque){
-        produto.alterarQuantidadeEstoque(estoque);
+        produto.adicionarQuantidadeEstoque(estoque);
+        genDAO.alterar(produto);
+    }
+    
+    public void retirarQuantidadeProduto(
+            Produto produto, 
+            int estoque){
+        produto.retirarQuantidadeEstoque(estoque);
         genDAO.alterar(produto);
     }
     
@@ -131,27 +140,45 @@ public class GerenciadorDeDominio {
     
     /* VENDA */  
     
-    public Venda inserirVendas(
-            double totalVenda, 
-            Cliente cliente){
-        
+    public Venda inserirVenda(double totalVenda, Cliente cliente) {
         Venda venda = new Venda(totalVenda, cliente);
+        cliente.getVenda().add(venda);
         genDAO.inserir(venda);
+
+        for (Item_Venda item : itensVendaTemp) {
+            item.setVenda(venda);
+            genDAO.inserir(item);
+        }
+
+        itensVendaTemp.clear();
         return venda;
     }
-    
-    public List<Object> pesquisarVenda(String pesq)throws SQLException, ClassNotFoundException{
-        return genDAO.listar(Venda.class);        
+
+    public List<Object> pesquisarVenda(String pesq) throws SQLException, ClassNotFoundException {
+        return genDAO.listar(Venda.class);
     }
     
     /* ITEM VENDA */
-    public Item_Venda inserirItemVenda(Produto produto, Venda venda, int quantidade, double preco, double desconto) {
-        Item_Venda itemVenda = new Item_Venda(quantidade, produto, venda, quantidade, desconto);
-        genDAO.inserir(itemVenda);
-        return itemVenda;
+    public void adicionarItemVendaTemp(Produto produto, int quantidade) {
+        if (itensVendaTemp == null) {
+            itensVendaTemp = new ArrayList<>();
+        }
+
+        boolean itemEncontrado = false;
+        for (Item_Venda item : itensVendaTemp) {
+            if (item.getProduto().getIdProduto() == produto.getIdProduto()) {
+                item.setQtProduto(item.getQtProduto() + quantidade);
+                itemEncontrado = true;
+                break;
+            }
+        }
+        if (!itemEncontrado) {
+            Item_Venda itemVenda = new Item_Venda(produto, null, quantidade);
+            itensVendaTemp.add(itemVenda);
+        }
     }
-    
-    public List<Object> pesquisarItemVenda(String pesq) throws SQLException, ClassNotFoundException {
-        return genDAO.listar(Item_Venda.class);        
+
+    public List<Item_Venda> getItensVendaTemp() {
+        return itensVendaTemp;
     }
 }

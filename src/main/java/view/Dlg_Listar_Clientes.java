@@ -24,14 +24,12 @@ import org.hibernate.HibernateException;
  */
 public class Dlg_Listar_Clientes extends javax.swing.JDialog {
 
-    private GerenciadorDeInterface inter;
     private ClienteAbstractTableModel cliTableModel;
     private Cliente cliSelecionado = null;
     
-    public Dlg_Listar_Clientes(java.awt.Frame parent, boolean modal, GerenciadorDeInterface inter) {
+    public Dlg_Listar_Clientes(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        initComponents();
-        this.inter = inter;        
+        initComponents();  
         cliTableModel = new ClienteAbstractTableModel();
         tbListarCliente.setModel((TableModel) cliTableModel);        
         atualizarTabelaCliente();
@@ -151,48 +149,61 @@ public class Dlg_Listar_Clientes extends javax.swing.JDialog {
     private void btVoltarListarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btVoltarListarClienteActionPerformed
         
         this.setVisible(false);
-
-        try {
-            inter.abrirJanelaDlg_Menu();
-        } catch (NoSuchMethodException ex) {
-            Logger.getLogger(Main_Frame.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        abrirJanelaMenu();
         
     }//GEN-LAST:event_btVoltarListarClienteActionPerformed
 
+    private void abrirJanelaMenu() {
+        try {
+            GerenciadorDeInterface.getInstance().abrirJanelaDlg_Menu();
+        } catch (NoSuchMethodException ex) {
+            mostrarErro("Erro ao abrir o menu principal", ex);
+        }
+    }
+    
     private void btExcluirClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btExcluirClienteActionPerformed
         
         int selectedRow = tbListarCliente.getSelectedRow();
         if (selectedRow < 0) {
-            JOptionPane.showMessageDialog(this, "Selecione um cliente.", "ERRO: Excluir Cliente", JOptionPane.ERROR_MESSAGE);
+            mostrarMensagem("Selecione um cliente.", "ERRO: Excluir Cliente", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         Cliente cliente = cliTableModel.getCliente(selectedRow);
         int confirm = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja excluir o cliente " + cliente.getNome() + "?", "Excluir Cliente", JOptionPane.YES_NO_OPTION);
-    
+
         if (confirm == JOptionPane.YES_OPTION) {
-            try {
-                GerenciadorDeInterface.getInstance().getDominio().excluirCliente(cliente);
-                atualizarTabelaCliente();
-                JOptionPane.showMessageDialog(this, "Cliente excluído com sucesso.", "Excluir Cliente", JOptionPane.INFORMATION_MESSAGE);
-                setFalseButton();
-            } catch (HibernateException ex) {
-                JOptionPane.showMessageDialog(this, "Erro ao excluir cliente: " + ex.getMessage(), "ERRO: Excluir Cliente", JOptionPane.ERROR_MESSAGE);
-            }
+            excluirCliente(cliente);
         }
         
     }//GEN-LAST:event_btExcluirClienteActionPerformed
 
+    private void excluirCliente(Cliente cliente) {
+        
+        try {
+            GerenciadorDeInterface.getInstance().getDominio().excluirCliente(cliente);
+            atualizarTabelaCliente();
+            mostrarMensagem("Cliente excluído com sucesso.", "Excluir Cliente", JOptionPane.INFORMATION_MESSAGE);
+            setFalseButton();
+        } catch (HibernateException ex) {
+            mostrarErro("Erro ao excluir cliente: " + ex.getMessage(), ex);
+        }
+        
+    }
+    
     private void btBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarClienteActionPerformed
 
         if (campoBuscaVazio()) {
-            JOptionPane.showMessageDialog(this, "Digite algo para buscar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            mostrarMensagem("Digite algo para buscar.", "Aviso", JOptionPane.WARNING_MESSAGE);
             atualizarTabelaCliente();
+            return;
         }
+        buscarCliente(fieldListarCliente.getText().trim());
+        
+    }//GEN-LAST:event_btBuscarClienteActionPerformed
 
-        String pesquisa = fieldListarCliente.getText().trim();
-
+    private void buscarCliente(String pesquisa) {
+        
         try {
             List<Cliente> clientesFiltrados = new ArrayList<>();
             List<Cliente> clientes = GerenciadorDeInterface.getInstance().getDominio().listar(Cliente.class);
@@ -205,36 +216,39 @@ public class Dlg_Listar_Clientes extends javax.swing.JDialog {
                     clientesFiltrados.add(cliente);
                 }
             }
-            
+
             if (clientesFiltrados.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Nenhum cliente encontrado com os critérios de busca.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                mostrarMensagem("Nenhum cliente encontrado com os critérios de busca.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
                 fieldListarCliente.setText("");
                 atualizarTabelaCliente();
-            } else{
+            } else {
                 cliTableModel.setLista(clientesFiltrados);
-            }            
+            }
         } catch (ClassNotFoundException | SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Erro ao buscar clientes: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            mostrarErro("Erro ao buscar clientes: " + ex.getMessage(), ex);
         }
         
-    }//GEN-LAST:event_btBuscarClienteActionPerformed
-
+    }
+    
     private void btAlterarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAlterarClienteActionPerformed
 
         int selectedRow = tbListarCliente.getSelectedRow();
         if (selectedRow < 0) {
-            JOptionPane.showMessageDialog(this, "Selecione um cliente.", "ERRO: Alterar Cliente", JOptionPane.ERROR_MESSAGE);
+            mostrarMensagem("Selecione um cliente.", "ERRO: Alterar Cliente", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
         Cliente cliente = cliTableModel.getCliente(selectedRow);
+        alterarCliente(cliente);
+        
+    }//GEN-LAST:event_btAlterarClienteActionPerformed
+
+    private void alterarCliente(Cliente cliente) {
         
         JTextField nomeField = new JTextField(cliente.getNome());
         JTextField cpfField = new JTextField(cliente.getCpf());
         JTextField telField = new JTextField(cliente.getTel());
-        
-        JPanel panel = new JPanel(new GridLayout(3,2));
-        
+
+        JPanel panel = new JPanel(new GridLayout(3, 2));
         panel.add(new JLabel("Nome:"));
         panel.add(nomeField);
         panel.add(new JLabel("CPF:"));
@@ -245,28 +259,42 @@ public class Dlg_Listar_Clientes extends javax.swing.JDialog {
         int result = JOptionPane.showConfirmDialog(null, panel, "Alterar Cliente", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
-            String novoNome = nomeField.getText();
-            String novoCpf = cpfField.getText();
-            String novoTel = telField.getText();
-
-            if (!novoNome.isEmpty() && !novoCpf.isEmpty() && !novoTel.isEmpty()) {
-                GerenciadorDeInterface.getInstance().getDominio().alterarCliente(cliente, novoNome, novoCpf, novoTel);
-                atualizarTabelaCliente();
-                JOptionPane.showMessageDialog(this, "Cliente alterado com sucesso.", "Alterar Cliente", JOptionPane.INFORMATION_MESSAGE);
-                setFalseButton();
+            if (camposValidos(nomeField, cpfField, telField)) {
+                try {
+                    GerenciadorDeInterface.getInstance().getDominio().alterarCliente(cliente, nomeField.getText(), cpfField.getText(), telField.getText());
+                    atualizarTabelaCliente();
+                    mostrarMensagem("Cliente alterado com sucesso.", "Alterar Cliente", JOptionPane.INFORMATION_MESSAGE);
+                    setFalseButton();
+                } catch (HibernateException ex) {
+                    mostrarErro("Erro ao alterar cliente: " + ex.getMessage(), ex);
+                }
             } else {
-                JOptionPane.showMessageDialog(this, "Todos os campos devem ser preenchidos.", "ERRO: Alterar Cliente", JOptionPane.ERROR_MESSAGE);
+                mostrarMensagem("Todos os campos devem ser preenchidos.", "ERRO: Alterar Cliente", JOptionPane.ERROR_MESSAGE);
             }
         }
-    }//GEN-LAST:event_btAlterarClienteActionPerformed
-
+        
+    }
+    
+    private boolean camposValidos(JTextField... campos) {
+        
+        for (JTextField campo : campos) {
+            if (campo.getText().trim().isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+        
+    }
+    
     private void btSelecionarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSelecionarClienteActionPerformed
+        
         int selectedRow = tbListarCliente.getSelectedRow();
         if (selectedRow < 0) {
-            JOptionPane.showMessageDialog(this, "Selecione um cliente.", "ERRO: Selecionar Cliente", JOptionPane.ERROR_MESSAGE);
+            mostrarMensagem("Selecione um cliente.", "ERRO: Selecionar Cliente", JOptionPane.ERROR_MESSAGE);
         } else {
             setTrueButton();
-        }        
+        }   
+        
     }//GEN-LAST:event_btSelecionarClienteActionPerformed
 
     private void btCancelarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelarClienteActionPerformed
@@ -278,33 +306,44 @@ public class Dlg_Listar_Clientes extends javax.swing.JDialog {
     }//GEN-LAST:event_fieldListarClienteActionPerformed
 
     private void atualizarTabelaCliente() {
+        
         try {
-            List<Cliente> cliente = GerenciadorDeInterface.getInstance().getDominio().listar(Cliente.class);
-            Collections.sort(cliente, Comparator.comparingInt(Cliente::getIdCliente));        
-            cliTableModel.setLista(cliente);
+            List<Cliente> clientes = GerenciadorDeInterface.getInstance().getDominio().listar(Cliente.class);
+            Collections.sort(clientes, Comparator.comparingInt(Cliente::getIdCliente));
+            cliTableModel.setLista(clientes);
         } catch (ClassNotFoundException | SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar clientes: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            mostrarErro("Erro ao carregar clientes: " + ex.getMessage(), ex);
         }
+        
     }
     
-    private void setTrueButton(){
+    private void setTrueButton() {
         btSelecionarCliente.setVisible(false);
-        tbListarCliente.setEnabled(false);        
+        tbListarCliente.setEnabled(false);
         btExcluirCliente.setVisible(true);
         btCancelarCliente.setVisible(true);
         btAlterarCliente.setVisible(true);
     }
-    
-    private void setFalseButton(){
-        btSelecionarCliente.setVisible(true);  
+
+    private void setFalseButton() {
+        btSelecionarCliente.setVisible(true);
         tbListarCliente.setEnabled(true);
         btExcluirCliente.setVisible(false);
         btCancelarCliente.setVisible(false);
-        btAlterarCliente.setVisible(false);        
+        btAlterarCliente.setVisible(false);
     }
-    
+
     private boolean campoBuscaVazio() {
         return fieldListarCliente.getText().trim().isEmpty();
+    }
+    
+    private void mostrarMensagem(String mensagem, String titulo, int tipo) {
+        JOptionPane.showMessageDialog(this, mensagem, titulo, tipo);
+    }
+
+    private void mostrarErro(String mensagem, Exception ex) {
+        Logger.getLogger(Dlg_Listar_Clientes.class.getName()).log(Level.SEVERE, mensagem, ex);
+        mostrarMensagem(mensagem, "Erro", JOptionPane.ERROR_MESSAGE);
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

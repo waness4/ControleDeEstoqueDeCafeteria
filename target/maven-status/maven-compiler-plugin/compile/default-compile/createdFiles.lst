@@ -1,4 +1,3 @@
-view\Dlg_Buscar_Produto$1.class
 view\Dlg_Menu$10.class
 view\Dlg_Menu$20.class
 view\Dlg_Listar_Produtos$6.class
@@ -7,7 +6,6 @@ view\Dlg_Menu$9.class
 view\Dlg_Menu$2.class
 view\Dlg_Listar_Clientes$3.class
 view\Dlg_Menu$6.class
-view\Dlg_Buscar_Produto$4.class
 view\Dlg_Menu$13.class
 view\Dlg_Menu$23.class
 control\GerenciadorDeDominio.class
@@ -25,7 +23,6 @@ view\Dlg_Menu.class
 view\Dlg_Menu$24.class
 view\Dlg_Listar_Produtos$5.class
 view\Dlg_Menu$1.class
-view\Dlg_Buscar_Produto$3.class
 view\Dlg_Listar_Produtos.class
 view\Dlg_Menu$8.class
 view\Dlg_Listar_Produtos$2.class
@@ -36,7 +33,9 @@ view\Dlg_Listar_Clientes.class
 view\Dlg_Listar_Clientes$5.class
 view\Dlg_Menu$4.class
 view\Dlg_Listar_Produtos$1.class
+view\Dlg_Listar_Produtos$8.class
 view\Dlg_Menu$15.class
+view\Dlg_Menu$25.class
 view\Dlg_Menu$19.class
 view\Dlg_Listar_Clientes$8.class
 control\VendaAbstractTableModel.class
@@ -45,14 +44,13 @@ view\Dlg_Listar_Clientes$2.class
 view\Dlg_Menu$18.class
 view\Main_Frame$2.class
 dao\GenericDAO.class
-view\Dlg_Buscar_Produto$2.class
 model\Venda.class
 view\Dlg_Listar_Produtos$7.class
+view\Dlg_Menu$26.class
 view\Dlg_Menu$3.class
 dao\ConexaoHibernate.class
 view\Dlg_Menu$11.class
 view\Dlg_Listar_Produtos$4.class
-view\Dlg_Buscar_Produto.class
 view\Dlg_Menu$14.class
 view\Dlg_Listar_Clientes$6.class
 view\Dlg_Menu$17.class

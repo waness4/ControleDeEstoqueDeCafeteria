@@ -57,21 +57,9 @@
             <Property name="useNullLayout" type="boolean" value="false"/>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="btAdicionarCliente">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Adicionar"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btAdicionarClienteActionPerformed"/>
-              </Events>
-              <Constraints>
-                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="380" y="210" width="100" height="30"/>
-                </Constraint>
-              </Constraints>
-            </Component>
             <Component class="javax.swing.JButton" name="btCancelarCliente">
               <Properties>
+                <Property name="mnemonic" type="int" value="67"/>
                 <Property name="text" type="java.lang.String" value="Cancelar"/>
               </Properties>
               <Events>
@@ -85,6 +73,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="btListarCliente">
               <Properties>
+                <Property name="mnemonic" type="int" value="76"/>
                 <Property name="text" type="java.lang.String" value="Listar"/>
               </Properties>
               <Events>
@@ -185,6 +174,20 @@
                 </Constraint>
               </Constraints>
             </Component>
+            <Component class="javax.swing.JButton" name="btAdicionarCliente">
+              <Properties>
+                <Property name="mnemonic" type="int" value="65"/>
+                <Property name="text" type="java.lang.String" value="Adicionar"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btAdicionarClienteActionPerformed"/>
+              </Events>
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+                  <AbsoluteConstraints x="380" y="210" width="100" height="30"/>
+                </Constraint>
+              </Constraints>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JTabbedPane" name="panProduto">
@@ -222,6 +225,7 @@
               <SubComponents>
                 <Component class="javax.swing.JButton" name="btListarProduto">
                   <Properties>
+                    <Property name="mnemonic" type="int" value="76"/>
                     <Property name="text" type="java.lang.String" value="Listar"/>
                   </Properties>
                   <Events>
@@ -235,6 +239,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btAdicionarProduto">
                   <Properties>
+                    <Property name="mnemonic" type="int" value="65"/>
                     <Property name="text" type="java.lang.String" value="Adicionar"/>
                   </Properties>
                   <Events>
@@ -381,6 +386,9 @@
                       </StringArray>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbCategoriaProdutoActionPerformed"/>
+                  </Events>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                   </AuxValues>
@@ -392,6 +400,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btCancelarProduto">
                   <Properties>
+                    <Property name="mnemonic" type="int" value="67"/>
                     <Property name="text" type="java.lang.String" value="Cancelar"/>
                   </Properties>
                   <Events>
@@ -433,6 +442,7 @@
               <SubComponents>
                 <Component class="javax.swing.JButton" name="btAdicionarEstoque">
                   <Properties>
+                    <Property name="mnemonic" type="int" value="65"/>
                     <Property name="text" type="java.lang.String" value="Adicionar"/>
                   </Properties>
                   <Events>
@@ -459,6 +469,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btCancelarEstoque">
                   <Properties>
+                    <Property name="mnemonic" type="int" value="67"/>
                     <Property name="text" type="java.lang.String" value="Cancelar"/>
                   </Properties>
                   <Events>
@@ -495,6 +506,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btBuscarEstoque">
                   <Properties>
+                    <Property name="mnemonic" type="int" value="66"/>
                     <Property name="text" type="java.lang.String" value="Buscar"/>
                   </Properties>
                   <Events>
@@ -551,7 +563,7 @@
             <Property name="useNullLayout" type="boolean" value="false"/>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="labTotalCarrinhoVenda">
+            <Component class="javax.swing.JLabel" name="labTotalVenda">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Bahnschrift" size="14" style="1"/>
@@ -564,17 +576,23 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JFormattedTextField" name="formatTotalCarrinhoVenda">
+            <Component class="javax.swing.JFormattedTextField" name="formatTotalVenda">
               <Properties>
+                <Property name="editable" type="boolean" value="false"/>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="null"/>
+                </Property>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="1" green="1" red="fc" type="rgb"/>
                 </Property>
                 <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
                   <Format format="#0.00" subtype="-1" type="0"/>
                 </Property>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="0.0"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="formatTotalCarrinhoVendaActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="formatTotalVendaActionPerformed"/>
               </Events>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -582,26 +600,16 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JLabel" name="labNomeCarrinho">
+            <Component class="javax.swing.JLabel" name="labNomeVenda">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Bahnschrift" size="14" style="1"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Adicionar Produto:"/>
+                <Property name="text" type="java.lang.String" value="Produto:"/>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="150" y="60" width="-1" height="30"/>
-                </Constraint>
-              </Constraints>
-            </Component>
-            <Component class="javax.swing.JTextField" name="fieldNomeCarrinho">
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fieldNomeCarrinhoActionPerformed"/>
-              </Events>
-              <Constraints>
-                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="280" y="60" width="150" height="30"/>
+                  <AbsoluteConstraints x="30" y="50" width="-1" height="30"/>
                 </Constraint>
               </Constraints>
             </Component>
@@ -617,20 +625,21 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTable" name="tableCarrinho">
+                <Component class="javax.swing.JTable" name="tableVenda">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="3" rowCount="0">
-                        <Column editable="true" title="Produto" type="java.lang.String"/>
+                      <Table columnCount="4" rowCount="0">
+                        <Column editable="false" title="Produto" type="java.lang.String"/>
                         <Column editable="true" title="Qt" type="java.lang.Object"/>
-                        <Column editable="true" title="Preco" type="java.lang.Object"/>
+                        <Column editable="false" title="Preco Unit&#xe1;rio" type="java.lang.Double"/>
+                        <Column editable="false" title="Total" type="java.lang.Double"/>
                       </Table>
                     </Property>
                   </Properties>
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JLabel" name="labQtCarrinho">
+            <Component class="javax.swing.JLabel" name="labQtVenda">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Bahnschrift" size="14" style="1"/>
@@ -639,54 +648,46 @@
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="200" y="98" width="-1" height="30"/>
+                  <AbsoluteConstraints x="490" y="50" width="-1" height="30"/>
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JFormattedTextField" name="formatQtCarrinho">
+            <Component class="javax.swing.JFormattedTextField" name="formatQtVenda">
               <Properties>
                 <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-                  <Format format="#0%" subtype="-1" type="3"/>
+                  <Format format="#0" subtype="-1" type="0"/>
                 </Property>
               </Properties>
-              <Constraints>
-                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="280" y="100" width="50" height="30"/>
-                </Constraint>
-              </Constraints>
-            </Component>
-            <Component class="javax.swing.JToggleButton" name="btBuscarCarrinho">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Buscar"/>
-              </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btBuscarCarrinhoActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="formatQtVendaActionPerformed"/>
               </Events>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="440" y="60" width="80" height="30"/>
+                  <AbsoluteConstraints x="570" y="50" width="50" height="30"/>
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JButton" name="btAdicionarCarrinho">
+            <Component class="javax.swing.JButton" name="btEditarVenda">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Adicionar"/>
+                <Property name="mnemonic" type="int" value="65"/>
+                <Property name="text" type="java.lang.String" value="Editar item venda"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btAdicionarCarrinhoActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btEditarVendaActionPerformed"/>
               </Events>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="340" y="100" width="90" height="30"/>
+                  <AbsoluteConstraints x="260" y="260" width="210" height="30"/>
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JButton" name="btFinalizarCarrinho">
+            <Component class="javax.swing.JButton" name="btFinalizarVenda">
               <Properties>
+                <Property name="mnemonic" type="int" value="70"/>
                 <Property name="text" type="java.lang.String" value="Finalizar"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btFinalizarCarrinhoActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btFinalizarVendaActionPerformed"/>
               </Events>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -694,12 +695,13 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JButton" name="btCancelarCarrinho">
+            <Component class="javax.swing.JButton" name="btCancelarVenda">
               <Properties>
+                <Property name="mnemonic" type="int" value="67"/>
                 <Property name="text" type="java.lang.String" value="Cancelar"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btCancelarCarrinhoActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btCancelarVendaActionPerformed"/>
               </Events>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -707,34 +709,59 @@
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="javax.swing.JComboBox" name="cbCliente">
-              <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="0"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbClienteActionPerformed"/>
-              </Events>
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-              </AuxValues>
-              <Constraints>
-                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="250" y="260" width="190" height="30"/>
-                </Constraint>
-              </Constraints>
-            </Component>
-            <Component class="javax.swing.JLabel" name="labCarrinho1">
+            <Component class="javax.swing.JLabel" name="labVenda">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Agency FB" size="24" style="1"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="CARRINHO"/>
+                <Property name="text" type="java.lang.String" value="VENDA"/>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="270" y="10" width="-1" height="-1"/>
+                  <AbsoluteConstraints x="300" y="10" width="-1" height="-1"/>
+                </Constraint>
+              </Constraints>
+            </Component>
+            <Component class="javax.swing.JTextField" name="fieldNomeVenda">
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fieldNomeVendaActionPerformed"/>
+              </Events>
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+                  <AbsoluteConstraints x="100" y="50" width="140" height="30"/>
+                </Constraint>
+              </Constraints>
+            </Component>
+            <Component class="javax.swing.JButton" name="btBuscarProduto">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Buscar"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btBuscarProdutoActionPerformed"/>
+              </Events>
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+                  <AbsoluteConstraints x="260" y="50" width="90" height="30"/>
+                </Constraint>
+              </Constraints>
+            </Component>
+            <Component class="javax.swing.JButton" name="btAdicionarVenda">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="cc" red="66" type="rgb"/>
+                </Property>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
+                <Property name="mnemonic" type="int" value="65"/>
+                <Property name="text" type="java.lang.String" value="Adicionar produto ao carrinho"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btAdicionarVendaActionPerformed"/>
+              </Events>
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+                  <AbsoluteConstraints x="220" y="100" width="210" height="30"/>
                 </Constraint>
               </Constraints>
             </Component>

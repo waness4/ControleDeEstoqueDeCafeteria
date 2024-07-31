@@ -125,7 +125,16 @@ public class Produto implements Serializable {
         this.item_venda = (List<Item_Venda>) item_venda;
     }
     
-    public void alterarQuantidadeEstoque(int quantidade){
+    public void adicionarQuantidadeEstoque(int quantidade){
         this.setEstoque(this.getEstoque() + quantidade);
+    }    
+    
+    public void retirarQuantidadeEstoque(int quantidade){
+        this.setEstoque(this.getEstoque() - quantidade);
+    }
+    
+    @Override
+    public String toString() {
+        return this.getNome() + " - " + this.getCategoria() + " - " + this.getValor();
     }
 }
