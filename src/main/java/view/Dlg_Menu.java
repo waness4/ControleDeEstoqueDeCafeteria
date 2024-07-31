@@ -5,7 +5,9 @@ import control.VendaAbstractTableModel;
 import java.awt.Color;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -23,7 +25,7 @@ import org.hibernate.HibernateException;
  */
 public class Dlg_Menu extends javax.swing.JDialog {
     
-    private Venda vendaAtual = new Venda();
+    private Venda vendaAtual = null;
     private VendaAbstractTableModel vendaTableModel;
     private Cliente clienteSelecionado = null;
     private Produto produtoSelecionado = null;
@@ -307,6 +309,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
         panControleEstoque.add(labAdicionarEstoque, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 30, -1, -1));
 
         fieldQtEstoque.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        fieldQtEstoque.setText("0");
         fieldQtEstoque.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fieldQtEstoqueActionPerformed(evt);
@@ -329,7 +332,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
         formatTotalVenda.setForeground(new java.awt.Color(252, 1, 1));
         formatTotalVenda.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         formatTotalVenda.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        formatTotalVenda.setText("0.0");
+        formatTotalVenda.setText("0,00");
         formatTotalVenda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 formatTotalVendaActionPerformed(evt);
@@ -381,13 +384,13 @@ public class Dlg_Menu extends javax.swing.JDialog {
         panVenda.add(formatQtVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 50, 50, 30));
 
         btEditarVenda.setMnemonic('A');
-        btEditarVenda.setText("Editar item venda");
+        btEditarVenda.setText("Selecionar");
         btEditarVenda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btEditarVendaActionPerformed(evt);
             }
         });
-        panVenda.add(btEditarVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 260, 210, 30));
+        panVenda.add(btEditarVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 260, 100, 30));
 
         btFinalizarVenda.setMnemonic('F');
         btFinalizarVenda.setText("Finalizar");
@@ -517,38 +520,38 @@ public class Dlg_Menu extends javax.swing.JDialog {
 
     private void btAdicionarEstoqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAdicionarEstoqueActionPerformed
 
-    if (fieldNomeEstoque.getText().isEmpty() || fieldQtEstoque.getText().isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Preencha todos os campos", "ERRO: Adicionar Estoque", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
+        if (fieldNomeEstoque.getText().isEmpty() || fieldQtEstoque.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Preencha todos os campos", "ERRO: Adicionar Estoque", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-    try {
-        int estoque = Integer.parseInt(fieldQtEstoque.getText());
-        System.out.println(estoque);
-        List<Object> produtos = GerenciadorDeInterface.getInstance().getDominio().pesquisarProduto(fieldNomeEstoque.getText(), 1);
+        try {
+            int estoque = Integer.parseInt(fieldQtEstoque.getText());
+            System.out.println(estoque);
+            List<Object> produtos = GerenciadorDeInterface.getInstance().getDominio().pesquisarProduto(fieldNomeEstoque.getText(), 1);
 
-        if (produtos != null && !produtos.isEmpty()) {
-            Produto produto = (Produto) produtos.get(0);
-            if (produto != null) {
-                try {
-                    GerenciadorDeInterface.getInstance().getDominio().adicionarQuantidadeProduto(produto, estoque);
-                    JOptionPane.showMessageDialog(this, "Estoque adicionado!", "Adicionar Estoque", JOptionPane.INFORMATION_MESSAGE);
-                } catch (HibernateException ex) {
-                    JOptionPane.showMessageDialog(this, "Erro ao atualizar o estoque: " + ex.getMessage(), "ERRO: Adicionar Estoque", JOptionPane.ERROR_MESSAGE);
+            if (produtos != null && !produtos.isEmpty()) {
+                Produto produto = (Produto) produtos.get(0);
+                if (produto != null) {
+                    try {
+                        GerenciadorDeInterface.getInstance().getDominio().adicionarQuantidadeProduto(produto, estoque);
+                        JOptionPane.showMessageDialog(this, "Estoque adicionado!", "Adicionar Estoque", JOptionPane.INFORMATION_MESSAGE);
+                    } catch (HibernateException ex) {
+                        JOptionPane.showMessageDialog(this, "Erro ao atualizar o estoque: " + ex.getMessage(), "ERRO: Adicionar Estoque", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Produto " + fieldNomeEstoque.getText() + " não encontrado", "ERRO: Adicionar Estoque", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Produto " + fieldNomeEstoque.getText() + " não encontrado", "ERRO: Adicionar Estoque", JOptionPane.ERROR_MESSAGE);
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "Produto " + fieldNomeEstoque.getText() + " não encontrado", "ERRO: Adicionar Estoque", JOptionPane.ERROR_MESSAGE);
-        }
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "Quantidade: " + fieldQtEstoque.getText() + " inválida.", "ERRO: Adicionar Estoque", JOptionPane.ERROR_MESSAGE);
-    }   catch (SQLException ex) {
-            Logger.getLogger(Dlg_Menu.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Quantidade: " + fieldQtEstoque.getText() + " inválida.", "ERRO: Adicionar Estoque", JOptionPane.ERROR_MESSAGE);
+        }   catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(Dlg_Menu.class.getName()).log(Level.SEVERE, null, ex);
         }
+        fieldNomeEstoque.setText("");
+        fieldQtEstoque.setText("0");
         
     }//GEN-LAST:event_btAdicionarEstoqueActionPerformed
 
@@ -582,11 +585,58 @@ public class Dlg_Menu extends javax.swing.JDialog {
     }//GEN-LAST:event_fieldNomeEstoqueActionPerformed
 
     private void btBuscarEstoqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarEstoqueActionPerformed
-
-        
-        
+        buscarEstoque();
     }//GEN-LAST:event_btBuscarEstoqueActionPerformed
 
+    private void buscarEstoque() {
+        try {
+            List<Produto> produtosFiltrados = new ArrayList<>();
+            String pesquisa = fieldNomeEstoque.getText().trim();
+
+            List<Produto> produtos = GerenciadorDeInterface.getInstance().getDominio().listar(Produto.class);
+            for (Produto produto : produtos) {
+                if (produto.getNome().toLowerCase().contains(pesquisa.toLowerCase()) ||
+                    produto.getCategoria().toLowerCase().contains(pesquisa.toLowerCase()) ||
+                    String.valueOf(produto.getTam_pes()).contains(pesquisa) ||
+                    produto.getUnidMedida().toLowerCase().contains(pesquisa.toLowerCase()) ||
+                    String.valueOf(produto.getValor()).contains(pesquisa) ||
+                    String.valueOf(produto.getEstoque()).contains(pesquisa) ||
+                    String.valueOf(produto.getIdProduto()).contains(pesquisa)) {
+
+                    produtosFiltrados.add(produto);
+                }
+            }
+
+            if (produtosFiltrados.isEmpty()) {
+                mostrarMensagem("Nenhum produto encontrado com os critérios de busca.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                fieldNomeEstoque.setText("");
+            } else if (produtosFiltrados.size() == 1) {
+                Produto produto = produtosFiltrados.get(0);
+                fieldNomeEstoque.setText(produto.getNome());
+                produtoSelecionado = produto; // Armazenar o produto selecionado para uso posterior
+            } else {
+                // Mais de um produto encontrado, pedir seleção ao usuário
+                Produto[] produtosArray = produtosFiltrados.toArray(Produto[]::new);
+                Produto produtoSelecionado2 = (Produto) JOptionPane.showInputDialog(null,
+                        "Vários produtos encontrados. Selecione um:",
+                        "Seleção de Produto",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        produtosArray,
+                        produtosArray[0]);
+
+                if (produtoSelecionado2 != null) {
+                    fieldNomeEstoque.setText(produtoSelecionado2.getNome());
+                    this.produtoSelecionado = produtoSelecionado2; // Armazenar o produto selecionado para uso posterior
+                } else {
+                    mostrarMensagem("Nenhum produto selecionado.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Dlg_Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     private void btCancelarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelarVendaActionPerformed
         if (vendaTableModel.getRowCount() == 0) {
             mostrarMensagem("Não há nenhum produto na tabela!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
@@ -595,11 +645,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
         int confirmar = JOptionPane.showConfirmDialog(null, "Você tem certeza que deseja cancelar a venda? Todos os itens serão removidos.", "Confirmar Cancelamento", JOptionPane.YES_NO_OPTION);
 
         if (confirmar == JOptionPane.YES_OPTION) {
-            vendaTableModel.limpar(); 
-            fieldNomeVenda.setText("");
-            formatQtVenda.setText("0");
-            formatTotalVenda.setText("0.00");
-            vendaAtual = null;
+            limparCamposVenda();
             mostrarMensagem("Venda cancelada com sucesso.", "Informação", JOptionPane.INFORMATION_MESSAGE);
         }
         
@@ -612,8 +658,8 @@ public class Dlg_Menu extends javax.swing.JDialog {
             return;
         }
         
-        Cliente clienteSelecionado = selecionarCliente();
-        if (clienteSelecionado == null) {
+        Cliente clienteSelecionado2 = selecionarCliente();
+        if (clienteSelecionado2 == null) {
             mostrarMensagem("Nenhum cliente selecionado.", "Aviso", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -621,14 +667,14 @@ public class Dlg_Menu extends javax.swing.JDialog {
         int confirmar = JOptionPane.showConfirmDialog(this, "Você tem certeza que deseja finalizar a venda?", "Confirmar Finalização", JOptionPane.YES_NO_OPTION);
         if (confirmar == JOptionPane.YES_OPTION) {
             double totalVenda = vendaTableModel.calcularTotal();
-
             try {
-                GerenciadorDeInterface.getInstance().getDominio().inserirVenda(totalVenda, clienteSelecionado);
-
+                Venda venda = GerenciadorDeInterface.getInstance().getDominio().inserirVenda(totalVenda, clienteSelecionado2);
                 for (Item_Venda item : vendaTableModel.getListaItens()) {
                     Produto produto = item.getProduto();
                     int novaQuantidade = produto.getEstoque() - item.getQtProduto();
                     produto.setEstoque(novaQuantidade);
+                    GerenciadorDeInterface.getInstance().getDominio().atualizarProduto(produto);
+                    GerenciadorDeInterface.getInstance().getDominio().adicionarItemVenda(new Item_Venda(produto, venda, item.getQtProduto()));
                 }
 
                 mostrarMensagem("Venda finalizada com sucesso. Total: R$ " + String.format("%.2f", totalVenda), "Informação", JOptionPane.INFORMATION_MESSAGE);
@@ -640,27 +686,27 @@ public class Dlg_Menu extends javax.swing.JDialog {
     }//GEN-LAST:event_btFinalizarVendaActionPerformed
     
     private Cliente selecionarCliente() {
-            List<Cliente> clientes;
+        List<Cliente> clientes;
         try {
             clientes = GerenciadorDeInterface.getInstance().getDominio().listar(Cliente.class);
         } catch (ClassNotFoundException | SQLException ex) {
             mostrarErro("Erro ao carregar clientes: " + ex.getMessage(), ex);
             return null;
         }
-
+        
         if (clientes.isEmpty()) {
             mostrarMensagem("Nenhum cliente encontrado.", "Aviso", JOptionPane.WARNING_MESSAGE);
             return null;
         }
-
-        // Criação do JComboBox com os clientes
-        JComboBox<Cliente> cbClientes = new JComboBox<>(new DefaultComboBoxModel<>(clientes.toArray(new Cliente[0])));
+        
+        Set<Cliente> clienteSet = new LinkedHashSet<>(clientes); // Utiliza LinkedHashSet para manter a ordem e remover duplicatas
+        JComboBox<Cliente> cbClientes = new JComboBox<>(new DefaultComboBoxModel<>(clienteSet.toArray(new Cliente[0])));
 
         int result = JOptionPane.showConfirmDialog(this, cbClientes, "Selecionar Cliente", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
-            Cliente clienteSelecionado = (Cliente) cbClientes.getSelectedItem();
-            return clienteSelecionado;
+            Cliente clienteSelecionado2 = (Cliente) cbClientes.getSelectedItem();
+            return clienteSelecionado2;
         } else {
             mostrarMensagem("Nenhum cliente selecionado.", "Aviso", JOptionPane.WARNING_MESSAGE);
             return null;
@@ -680,7 +726,95 @@ public class Dlg_Menu extends javax.swing.JDialog {
 
     private void btEditarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditarVendaActionPerformed
 
+        int selectedRow = tableVenda.getSelectedRow();
+        if (selectedRow < 0) {
+            mostrarMensagem("Nenhum item selecionado para editar ou excluir.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Obtém o item selecionado da tabela
+        Item_Venda itemSelecionado = vendaTableModel.getListaItens().get(selectedRow);
+
+        // Exibe um diálogo para selecionar a ação: Alterar ou Excluir
+        String[] options = {"Alterar", "Excluir"};
+        int escolha = JOptionPane.showOptionDialog(
+                this, 
+                "O que você deseja fazer com o item selecionado?", 
+                "Alterar Tabela Venda", 
+                JOptionPane.DEFAULT_OPTION, 
+                JOptionPane.QUESTION_MESSAGE, 
+                null, 
+                options, 
+                options[0] // Opção padrão
+        );
+
+        if (escolha == 0) { // Alterar
+            alterarItemVenda(itemSelecionado);
+        } else if (escolha == 1) { // Excluir
+            excluirItemVenda(itemSelecionado, selectedRow);
+        }
     }//GEN-LAST:event_btEditarVendaActionPerformed
+
+    private void alterarItemVenda(Item_Venda itemSelecionado) {
+        String novaQuantidadeStr = JOptionPane.showInputDialog(
+                this, 
+                "Digite a nova quantidade:", 
+                itemSelecionado.getQtProduto()
+        );
+
+        try {
+            int novaQuantidade = Integer.parseInt(novaQuantidadeStr);
+            if (novaQuantidade <= 0) {
+                mostrarMensagem("A quantidade deve ser maior que zero.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Atualiza a quantidade do item na lista de itens da venda atual
+            Item_Venda itemVendaAtual = vendaAtual.getItem_venda()
+                    .stream()
+                    .filter(item -> item.getProduto().getIdProduto() == itemSelecionado.getProduto().getIdProduto())
+                    .findFirst()
+                    .orElse(null);
+
+            if (itemVendaAtual != null) {
+                itemVendaAtual.setQtProduto(novaQuantidade);
+                int rowIndex = vendaTableModel.getListaItens().indexOf(itemSelecionado);
+                if (rowIndex >= 0) {
+                    // Atualiza o item na tabela
+                    vendaTableModel.getListaItens().set(rowIndex, itemVendaAtual);
+                    vendaTableModel.fireTableRowsUpdated(rowIndex, rowIndex);
+                }
+                calcularTotalVenda();
+            } else {
+                mostrarMensagem("Item não encontrado na venda atual.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            }
+
+        } catch (NumberFormatException ex) {
+            mostrarMensagem("Quantidade inválida.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void excluirItemVenda(Item_Venda itemSelecionado, int rowIndex) {
+        int confirmar = JOptionPane.showConfirmDialog(
+                this, 
+                "Tem certeza de que deseja excluir o item selecionado?", 
+                "Confirmar Exclusão", 
+                JOptionPane.YES_NO_OPTION, 
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (confirmar == JOptionPane.YES_OPTION) { 
+            boolean itemRemovido = vendaAtual.getItem_venda().removeIf(item -> item.getProduto().getIdProduto() == itemSelecionado.getProduto().getIdProduto());
+
+            // Remove o item da tabela de venda
+            if (itemRemovido) {
+                vendaTableModel.getListaItens().remove(rowIndex);
+                atualizarTabelaItensVenda();
+                calcularTotalVenda();
+            
+            }
+        }
+    }
 
     
     private void btAdicionarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAdicionarClienteActionPerformed
@@ -784,14 +918,12 @@ public class Dlg_Menu extends javax.swing.JDialog {
 
         int quantidade;
         try {
-            // Tenta parsear a quantidade informada pelo usuário
             quantidade = Integer.parseInt(formatQtVenda.getText().trim());
             if (quantidade <= 0) {
                 mostrarMensagem("A quantidade deve ser maior que zero.", "Aviso", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            // Verifica a quantidade em estoque do produto
             if (produtoSelecionado.getEstoque() <= 0) {
                 mostrarMensagem("Produto fora de estoque.", "Aviso", JOptionPane.WARNING_MESSAGE);
                 return;
@@ -805,8 +937,8 @@ public class Dlg_Menu extends javax.swing.JDialog {
         }
 
         try {
-            // Adiciona o item temporário à venda
             GerenciadorDeInterface.getInstance().getDominio().adicionarItemVendaTemp(produtoSelecionado, quantidade);
+            vendaAtual.getItem_venda().add(new Item_Venda(produtoSelecionado, vendaAtual, quantidade));
         } catch (Exception ex) {
             mostrarMensagem("Erro ao adicionar produto à venda: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             return;
@@ -821,6 +953,16 @@ public class Dlg_Menu extends javax.swing.JDialog {
         fieldNomeVenda.setText("");
     }//GEN-LAST:event_btAdicionarVendaActionPerformed
 
+    private void calcularTotalVenda() {        
+        double total = 0.0;
+        if (vendaAtual != null && vendaAtual.getItem_venda() != null) {
+            for (Item_Venda item : vendaAtual.getItem_venda()) {
+                total += item.getProduto().getValor() * item.getQtProduto();
+            }
+        }
+        formatTotalVenda.setText(String.format("%.2f", total));
+    }
+    
     private void atualizarTabelaItensVenda() {
         List<Item_Venda> itensVenda = GerenciadorDeInterface.getInstance().getDominio().getItensVendaTemp();
         vendaTableModel.setLista(itensVenda);
@@ -1029,17 +1171,5 @@ public class Dlg_Menu extends javax.swing.JDialog {
         Logger.getLogger(Dlg_Listar_Clientes.class.getName()).log(Level.SEVERE, mensagem, ex);
         mostrarMensagem(mensagem, "Erro", JOptionPane.ERROR_MESSAGE);
     }
-    
-    /* VENDA*/
-    
-    private void calcularTotalVenda() {        
-        double total = 0.0;
-        List<Item_Venda> itensVenda = vendaAtual.getItem_venda(); 
-        if (itensVenda != null) {
-            for (Item_Venda item : itensVenda) {
-                total += item.getProduto().getValor() * item.getQtProduto();
-            }
-        }
-        formatTotalVenda.setText(String.format("%.2f", total));
-    }
+
 }

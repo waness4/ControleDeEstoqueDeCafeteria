@@ -536,6 +536,7 @@
                     <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
                       <Format format="#0" subtype="-1" type="0"/>
                     </Property>
+                    <Property name="text" type="java.lang.String" value="0"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fieldQtEstoqueActionPerformed"/>
@@ -589,7 +590,7 @@
                   <Format format="#0.00" subtype="-1" type="0"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="0.0"/>
+                <Property name="text" type="java.lang.String" value="0,00"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="formatTotalVendaActionPerformed"/>
@@ -670,14 +671,14 @@
             <Component class="javax.swing.JButton" name="btEditarVenda">
               <Properties>
                 <Property name="mnemonic" type="int" value="65"/>
-                <Property name="text" type="java.lang.String" value="Editar item venda"/>
+                <Property name="text" type="java.lang.String" value="Selecionar"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btEditarVendaActionPerformed"/>
               </Events>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="260" y="260" width="210" height="30"/>
+                  <AbsoluteConstraints x="240" y="260" width="100" height="30"/>
                 </Constraint>
               </Constraints>
             </Component>

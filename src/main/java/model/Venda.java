@@ -1,6 +1,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,6 +42,7 @@ public class Venda implements Serializable {
             double totalVenda, Cliente cliente) {
         this.totalVenda = totalVenda;
         this.cliente = cliente;
+        this.item_venda = new ArrayList<>();
     }
 
     public int getIdVenda() {

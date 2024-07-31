@@ -126,11 +126,11 @@ public class Produto implements Serializable {
     }
     
     public void adicionarQuantidadeEstoque(int quantidade){
-        this.setEstoque(this.getEstoque() + quantidade);
+        this.estoque += quantidade;
     }    
     
     public void retirarQuantidadeEstoque(int quantidade){
-        this.setEstoque(this.getEstoque() - quantidade);
+        this.estoque -= quantidade;
     }
     
     @Override

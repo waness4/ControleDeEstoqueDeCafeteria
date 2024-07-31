@@ -127,10 +127,12 @@ public class GerenciadorDeDominio {
         genDAO.alterar(produto);
     }
     
-    public void retirarQuantidadeProduto(
-            Produto produto, 
-            int estoque){
-        produto.retirarQuantidadeEstoque(estoque);
+    public void retirarQuantidadeProduto(Produto produto, int quantidade) {
+        produto.retirarQuantidadeEstoque(quantidade);
+        genDAO.alterar(produto);
+    }
+
+    public void atualizarProduto(Produto produto) {
         genDAO.alterar(produto);
     }
     
@@ -141,16 +143,10 @@ public class GerenciadorDeDominio {
     /* VENDA */  
     
     public Venda inserirVenda(double totalVenda, Cliente cliente) {
-        Venda venda = new Venda(totalVenda, cliente);
-        cliente.getVenda().add(venda);
+        Venda venda = new Venda();
+        venda.setCliente(cliente);
+        venda.setTotalVenda(totalVenda);
         genDAO.inserir(venda);
-
-        for (Item_Venda item : itensVendaTemp) {
-            item.setVenda(venda);
-            genDAO.inserir(item);
-        }
-
-        itensVendaTemp.clear();
         return venda;
     }
 
@@ -172,10 +168,15 @@ public class GerenciadorDeDominio {
                 break;
             }
         }
+
         if (!itemEncontrado) {
             Item_Venda itemVenda = new Item_Venda(produto, null, quantidade);
             itensVendaTemp.add(itemVenda);
         }
+    }
+    
+    public void adicionarItemVenda(Item_Venda itemVenda) {
+        genDAO.inserir(itemVenda);
     }
 
     public List<Item_Venda> getItensVendaTemp() {
