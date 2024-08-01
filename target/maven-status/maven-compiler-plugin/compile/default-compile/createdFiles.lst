@@ -5,6 +5,7 @@ control\ProdutoAbstractTableModel.class
 view\Dlg_Menu$9.class
 view\Dlg_Menu$2.class
 view\Dlg_Listar_Clientes$3.class
+view\Dlg_Menu$30.class
 view\Dlg_Menu$6.class
 view\Dlg_Menu$13.class
 view\Dlg_Menu$23.class
@@ -28,6 +29,7 @@ view\Dlg_Menu$8.class
 view\Dlg_Listar_Produtos$2.class
 view\Dlg_Menu$12.class
 view\Main_Frame$1.class
+view\Dlg_Menu$27.class
 view\Dlg_Listar_Clientes$1.class
 view\Dlg_Listar_Clientes.class
 view\Dlg_Listar_Clientes$5.class
@@ -35,6 +37,7 @@ view\Dlg_Menu$4.class
 view\Dlg_Listar_Produtos$1.class
 view\Dlg_Listar_Produtos$8.class
 view\Dlg_Menu$15.class
+control\HistoricoVendaAbstractTableModel.class
 view\Dlg_Menu$25.class
 view\Dlg_Menu$19.class
 view\Dlg_Listar_Clientes$8.class
@@ -42,6 +45,7 @@ control\VendaAbstractTableModel.class
 view\Dlg_Menu$7.class
 view\Dlg_Listar_Clientes$2.class
 view\Dlg_Menu$18.class
+view\Dlg_Menu$28.class
 view\Main_Frame$2.class
 dao\GenericDAO.class
 model\Venda.class
@@ -50,6 +54,7 @@ view\Dlg_Menu$26.class
 view\Dlg_Menu$3.class
 dao\ConexaoHibernate.class
 view\Dlg_Menu$11.class
+view\Dlg_Menu$29.class
 view\Dlg_Listar_Produtos$4.class
 view\Dlg_Menu$14.class
 view\Dlg_Listar_Clientes$6.class

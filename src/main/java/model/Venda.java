@@ -1,8 +1,10 @@
 package model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
 /**
  *
  * @author wanes
@@ -28,12 +29,15 @@ public class Venda implements Serializable {
     @Column (name="totalVenda", nullable = false)
     private double totalVenda;
     
+    @Column(name = "dataVenda", nullable = false)
+    private Timestamp dataVenda;
+    
     @ManyToOne
     @JoinColumn(name = "idCliente", nullable = false)
     private Cliente cliente;
     
-    @OneToMany(mappedBy = "venda")
-    private List<Item_Venda> item_venda;
+    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Item_Venda> item_venda = new ArrayList<>();
 
     public Venda() {
     }
@@ -76,5 +80,12 @@ public class Venda implements Serializable {
     public void setItem_venda(List<Item_Venda> item_venda) {
         this.item_venda = item_venda;
     }   
-    
+
+    public Timestamp getDataVenda() {
+        return dataVenda;
+    }
+
+    public void setDataVenda(Timestamp dataVenda) {
+        this.dataVenda = dataVenda;
+    }
 }

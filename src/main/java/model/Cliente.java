@@ -33,8 +33,8 @@ public class Cliente implements Serializable{
     @Column (name= "tel", unique = true, length = 15)
     private String tel;
     
-    @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
-    private List<Venda> venda;
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Venda> vendas;
 
     public Cliente(int idCliente, String nome, String cpf, String tel) {
         this.idCliente = idCliente;
@@ -85,11 +85,11 @@ public class Cliente implements Serializable{
     }
 
     public List<Venda> getVenda() {
-        return venda;
+        return vendas;
     }
 
-    public void setVenda(List<Venda> venda) {
-        this.venda = venda;
+    public void setVenda(List<Venda> vendas) {
+        this.vendas = vendas;
     }
 
     @Override

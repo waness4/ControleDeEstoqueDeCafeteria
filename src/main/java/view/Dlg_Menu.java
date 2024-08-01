@@ -1,10 +1,15 @@
 package view;
 
 import control.GerenciadorDeInterface;
+import control.HistoricoVendaAbstractTableModel;
 import control.VendaAbstractTableModel;
 import java.awt.Color;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,16 +30,19 @@ import org.hibernate.HibernateException;
  */
 public class Dlg_Menu extends javax.swing.JDialog {
     
-    private Venda vendaAtual = null;
-    private VendaAbstractTableModel vendaTableModel;
-    private Cliente clienteSelecionado = null;
+    private Venda vendaAtual = null;    
+    private VendaAbstractTableModel vendaTableModel;        
+    private HistoricoVendaAbstractTableModel historicoVendaTableModel;
     private Produto produtoSelecionado = null;
     
     public Dlg_Menu(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        initComponents();
-        vendaTableModel = new VendaAbstractTableModel();
+        initComponents();    
+        vendaTableModel = new VendaAbstractTableModel();  
+        historicoVendaTableModel = new HistoricoVendaAbstractTableModel();
         tableVenda.setModel(vendaTableModel);
+        tbHistoricoVenda.setModel(historicoVendaTableModel);        
+        atualizarTabelaHistoricoVendas();
     }
 
     /**
@@ -83,21 +91,31 @@ public class Dlg_Menu extends javax.swing.JDialog {
         btBuscarEstoque = new javax.swing.JButton();
         labAdicionarEstoque = new javax.swing.JLabel();
         fieldQtEstoque = new javax.swing.JFormattedTextField();
-        panVenda = new javax.swing.JPanel();
-        labTotalVenda = new javax.swing.JLabel();
-        formatTotalVenda = new javax.swing.JFormattedTextField();
+        labQtEstoqueAtual = new javax.swing.JLabel();
+        fieldQtEstoqueAtual = new javax.swing.JFormattedTextField();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        panVendas = new javax.swing.JPanel();
         labNomeVenda = new javax.swing.JLabel();
-        scrolpanCarrinho = new javax.swing.JScrollPane();
-        tableVenda = new javax.swing.JTable();
-        labQtVenda = new javax.swing.JLabel();
-        formatQtVenda = new javax.swing.JFormattedTextField();
-        btEditarVenda = new javax.swing.JButton();
-        btFinalizarVenda = new javax.swing.JButton();
-        btCancelarVenda = new javax.swing.JButton();
-        labVenda = new javax.swing.JLabel();
         fieldNomeVenda = new javax.swing.JTextField();
         btBuscarProduto = new javax.swing.JButton();
+        labVenda = new javax.swing.JLabel();
+        labQtVenda = new javax.swing.JLabel();
+        formatQtVenda = new javax.swing.JFormattedTextField();
         btAdicionarVenda = new javax.swing.JButton();
+        scrolpanCarrinho1 = new javax.swing.JScrollPane();
+        tableVenda = new javax.swing.JTable();
+        btCancelarVenda = new javax.swing.JButton();
+        btFinalizarVenda = new javax.swing.JButton();
+        btEditarVenda = new javax.swing.JButton();
+        labTotalVenda = new javax.swing.JLabel();
+        formatTotalVenda = new javax.swing.JFormattedTextField();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tbHistoricoVenda = new javax.swing.JTable();
+        labHistoricoVendas = new javax.swing.JLabel();
+        btBuscarHistoricoVenda = new javax.swing.JButton();
+        formatHistoricoVenda = new javax.swing.JFormattedTextField();
+        labHistoricoVenda = new javax.swing.JLabel();
         btEncerrar = new javax.swing.JToggleButton();
         labImagemFundo = new javax.swing.JLabel();
 
@@ -262,6 +280,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
 
         panControleEstoque.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        btAdicionarEstoque.setFont(new java.awt.Font("Bahnschrift", 1, 12)); // NOI18N
         btAdicionarEstoque.setMnemonic('A');
         btAdicionarEstoque.setText("Adicionar");
         btAdicionarEstoque.addActionListener(new java.awt.event.ActionListener() {
@@ -269,12 +288,13 @@ public class Dlg_Menu extends javax.swing.JDialog {
                 btAdicionarEstoqueActionPerformed(evt);
             }
         });
-        panControleEstoque.add(btAdicionarEstoque, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 210, 90, 30));
+        panControleEstoque.add(btAdicionarEstoque, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 230, 90, 30));
 
         labQtEstoque.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
-        labQtEstoque.setText("Adicionar Quantidade:");
-        panControleEstoque.add(labQtEstoque, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 140, -1, 30));
+        labQtEstoque.setText("Adicionar Estoque:");
+        panControleEstoque.add(labQtEstoque, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 180, -1, 30));
 
+        btCancelarEstoque.setFont(new java.awt.Font("Bahnschrift", 1, 12)); // NOI18N
         btCancelarEstoque.setMnemonic('C');
         btCancelarEstoque.setText("Cancelar");
         btCancelarEstoque.addActionListener(new java.awt.event.ActionListener() {
@@ -282,7 +302,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
                 btCancelarEstoqueActionPerformed(evt);
             }
         });
-        panControleEstoque.add(btCancelarEstoque, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 210, 90, 30));
+        panControleEstoque.add(btCancelarEstoque, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 230, 90, 30));
 
         labNomeEstoque.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
         labNomeEstoque.setText("Produto:");
@@ -293,8 +313,9 @@ public class Dlg_Menu extends javax.swing.JDialog {
                 fieldNomeEstoqueActionPerformed(evt);
             }
         });
-        panControleEstoque.add(fieldNomeEstoque, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 90, 170, 30));
+        panControleEstoque.add(fieldNomeEstoque, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 90, 90, 30));
 
+        btBuscarEstoque.setFont(new java.awt.Font("Bahnschrift", 1, 12)); // NOI18N
         btBuscarEstoque.setMnemonic('B');
         btBuscarEstoque.setText("Buscar");
         btBuscarEstoque.addActionListener(new java.awt.event.ActionListener() {
@@ -302,11 +323,11 @@ public class Dlg_Menu extends javax.swing.JDialog {
                 btBuscarEstoqueActionPerformed(evt);
             }
         });
-        panControleEstoque.add(btBuscarEstoque, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 210, 80, 30));
+        panControleEstoque.add(btBuscarEstoque, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 90, 80, 30));
 
         labAdicionarEstoque.setFont(new java.awt.Font("Agency FB", 1, 24)); // NOI18N
         labAdicionarEstoque.setText("ADICIONAR ESTOQUE");
-        panControleEstoque.add(labAdicionarEstoque, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 30, -1, -1));
+        panControleEstoque.add(labAdicionarEstoque, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 30, -1, -1));
 
         fieldQtEstoque.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         fieldQtEstoque.setText("0");
@@ -315,34 +336,78 @@ public class Dlg_Menu extends javax.swing.JDialog {
                 fieldQtEstoqueActionPerformed(evt);
             }
         });
-        panControleEstoque.add(fieldQtEstoque, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 140, 80, 30));
+        panControleEstoque.add(fieldQtEstoque, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 180, 80, 30));
+
+        labQtEstoqueAtual.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
+        labQtEstoqueAtual.setText("Estoque atual:");
+        panControleEstoque.add(labQtEstoqueAtual, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 140, -1, 30));
+
+        fieldQtEstoqueAtual.setEditable(false);
+        fieldQtEstoqueAtual.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        fieldQtEstoqueAtual.setText("-");
+        fieldQtEstoqueAtual.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldQtEstoqueAtualActionPerformed(evt);
+            }
+        });
+        panControleEstoque.add(fieldQtEstoqueAtual, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 140, 80, 30));
 
         panProduto.addTab("Controle de Estoque", panControleEstoque);
 
         tpanMenu.addTab("Produtos", panProduto);
 
-        panVenda.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jTabbedPane1.setForeground(new java.awt.Color(102, 51, 0));
+        jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.LEFT);
+        jTabbedPane1.setFont(new java.awt.Font("Bahnschrift", 1, 12)); // NOI18N
 
-        labTotalVenda.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
-        labTotalVenda.setText("TOTAL:");
-        panVenda.add(labTotalVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 260, -1, 30));
-
-        formatTotalVenda.setEditable(false);
-        formatTotalVenda.setBorder(null);
-        formatTotalVenda.setForeground(new java.awt.Color(252, 1, 1));
-        formatTotalVenda.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
-        formatTotalVenda.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        formatTotalVenda.setText("0,00");
-        formatTotalVenda.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                formatTotalVendaActionPerformed(evt);
-            }
-        });
-        panVenda.add(formatTotalVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 260, 70, 30));
+        panVendas.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labNomeVenda.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
         labNomeVenda.setText("Produto:");
-        panVenda.add(labNomeVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, -1, 30));
+        panVendas.add(labNomeVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, -1, 30));
+
+        fieldNomeVenda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldNomeVendaActionPerformed(evt);
+            }
+        });
+        panVendas.add(fieldNomeVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 50, 140, 30));
+
+        btBuscarProduto.setText("Buscar");
+        btBuscarProduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btBuscarProdutoActionPerformed(evt);
+            }
+        });
+        panVendas.add(btBuscarProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 50, 80, 30));
+
+        labVenda.setFont(new java.awt.Font("Agency FB", 1, 24)); // NOI18N
+        labVenda.setText("VENDA");
+        panVendas.add(labVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, -1, -1));
+
+        labQtVenda.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
+        labQtVenda.setText("Quantidade:");
+        panVendas.add(labQtVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 50, -1, 30));
+
+        formatQtVenda.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        formatQtVenda.setText("0");
+        formatQtVenda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                formatQtVendaActionPerformed(evt);
+            }
+        });
+        panVendas.add(formatQtVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 50, 50, 30));
+
+        btAdicionarVenda.setBackground(new java.awt.Color(102, 204, 255));
+        btAdicionarVenda.setFont(new java.awt.Font("Bahnschrift", 1, 12)); // NOI18N
+        btAdicionarVenda.setMnemonic('A');
+        btAdicionarVenda.setText("Adicionar produto ao carrinho");
+        btAdicionarVenda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAdicionarVendaActionPerformed(evt);
+            }
+        });
+        panVendas.add(btAdicionarVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 100, 200, 30));
 
         tableVenda.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -367,40 +432,12 @@ public class Dlg_Menu extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
-        scrolpanCarrinho.setViewportView(tableVenda);
+        tableVenda.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        scrolpanCarrinho1.setViewportView(tableVenda);
 
-        panVenda.add(scrolpanCarrinho, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, 610, 110));
+        panVendas.add(scrolpanCarrinho1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, 470, 110));
 
-        labQtVenda.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
-        labQtVenda.setText("Quantidade:");
-        panVenda.add(labQtVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 50, -1, 30));
-
-        formatQtVenda.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        formatQtVenda.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                formatQtVendaActionPerformed(evt);
-            }
-        });
-        panVenda.add(formatQtVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 50, 50, 30));
-
-        btEditarVenda.setMnemonic('A');
-        btEditarVenda.setText("Selecionar");
-        btEditarVenda.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btEditarVendaActionPerformed(evt);
-            }
-        });
-        panVenda.add(btEditarVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 260, 100, 30));
-
-        btFinalizarVenda.setMnemonic('F');
-        btFinalizarVenda.setText("Finalizar");
-        btFinalizarVenda.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btFinalizarVendaActionPerformed(evt);
-            }
-        });
-        panVenda.add(btFinalizarVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 260, 100, 30));
-
+        btCancelarVenda.setFont(new java.awt.Font("Bahnschrift", 1, 12)); // NOI18N
         btCancelarVenda.setMnemonic('C');
         btCancelarVenda.setText("Cancelar");
         btCancelarVenda.addActionListener(new java.awt.event.ActionListener() {
@@ -408,39 +445,115 @@ public class Dlg_Menu extends javax.swing.JDialog {
                 btCancelarVendaActionPerformed(evt);
             }
         });
-        panVenda.add(btCancelarVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, 100, 30));
+        panVendas.add(btCancelarVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, 100, 30));
 
-        labVenda.setFont(new java.awt.Font("Agency FB", 1, 24)); // NOI18N
-        labVenda.setText("VENDA");
-        panVenda.add(labVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 10, -1, -1));
-
-        fieldNomeVenda.addActionListener(new java.awt.event.ActionListener() {
+        btFinalizarVenda.setFont(new java.awt.Font("Bahnschrift", 1, 12)); // NOI18N
+        btFinalizarVenda.setMnemonic('F');
+        btFinalizarVenda.setText("Finalizar");
+        btFinalizarVenda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fieldNomeVendaActionPerformed(evt);
+                btFinalizarVendaActionPerformed(evt);
             }
         });
-        panVenda.add(fieldNomeVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 50, 140, 30));
+        panVendas.add(btFinalizarVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 260, 100, 30));
 
-        btBuscarProduto.setText("Buscar");
-        btBuscarProduto.addActionListener(new java.awt.event.ActionListener() {
+        btEditarVenda.setFont(new java.awt.Font("Bahnschrift", 1, 12)); // NOI18N
+        btEditarVenda.setMnemonic('S');
+        btEditarVenda.setText("Selecionar");
+        btEditarVenda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btBuscarProdutoActionPerformed(evt);
+                btEditarVendaActionPerformed(evt);
             }
         });
-        panVenda.add(btBuscarProduto, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 50, 90, 30));
+        panVendas.add(btEditarVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 260, 100, 30));
 
-        btAdicionarVenda.setBackground(new java.awt.Color(102, 204, 255));
-        btAdicionarVenda.setForeground(new java.awt.Color(255, 255, 255));
-        btAdicionarVenda.setMnemonic('A');
-        btAdicionarVenda.setText("Adicionar produto ao carrinho");
-        btAdicionarVenda.addActionListener(new java.awt.event.ActionListener() {
+        labTotalVenda.setFont(new java.awt.Font("Bahnschrift", 1, 14)); // NOI18N
+        labTotalVenda.setText("TOTAL:");
+        panVendas.add(labTotalVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 260, -1, 30));
+
+        formatTotalVenda.setEditable(false);
+        formatTotalVenda.setBorder(null);
+        formatTotalVenda.setForeground(new java.awt.Color(252, 1, 1));
+        formatTotalVenda.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        formatTotalVenda.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        formatTotalVenda.setText("0,00");
+        formatTotalVenda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btAdicionarVendaActionPerformed(evt);
+                formatTotalVendaActionPerformed(evt);
             }
         });
-        panVenda.add(btAdicionarVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 100, 210, 30));
+        panVendas.add(formatTotalVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 260, 70, 30));
 
-        tpanMenu.addTab("Vendas", panVenda);
+        jTabbedPane1.addTab("Ponto de Venda", panVendas);
+
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        tbHistoricoVenda.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Id Venda", "Cliente", "Data-Hora", "Total"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tbHistoricoVenda.setName(""); // NOI18N
+        tbHistoricoVenda.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(tbHistoricoVenda);
+
+        jPanel2.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 470, 160));
+
+        labHistoricoVendas.setFont(new java.awt.Font("Agency FB", 1, 24)); // NOI18N
+        labHistoricoVendas.setText("HISTÓRICO DE VENDAS");
+        jPanel2.add(labHistoricoVendas, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 10, -1, -1));
+
+        btBuscarHistoricoVenda.setFont(new java.awt.Font("Bahnschrift", 1, 12)); // NOI18N
+        btBuscarHistoricoVenda.setText("Buscar");
+        btBuscarHistoricoVenda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btBuscarHistoricoVendaActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btBuscarHistoricoVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 60, -1, 30));
+
+        formatHistoricoVenda.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        try {
+            formatHistoricoVenda.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        formatHistoricoVenda.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        formatHistoricoVenda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                formatHistoricoVendaActionPerformed(evt);
+            }
+        });
+        jPanel2.add(formatHistoricoVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 60, 80, 30));
+
+        labHistoricoVenda.setFont(new java.awt.Font("Bahnschrift", 1, 18)); // NOI18N
+        labHistoricoVenda.setText("Dia:");
+        jPanel2.add(labHistoricoVenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 60, -1, 30));
+
+        jTabbedPane1.addTab("Histórico de vendas", jPanel2);
+
+        tpanMenu.addTab("Vendas", jTabbedPane1);
 
         getContentPane().add(tpanMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 650, 340));
 
@@ -552,15 +665,14 @@ public class Dlg_Menu extends javax.swing.JDialog {
         }
         fieldNomeEstoque.setText("");
         fieldQtEstoque.setText("0");
+        fieldQtEstoqueAtual.setText("-");
         
     }//GEN-LAST:event_btAdicionarEstoqueActionPerformed
 
     private void formatTelefoneClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formatTelefoneClienteActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_formatTelefoneClienteActionPerformed
 
     private void formatCpfClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formatCpfClienteActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_formatCpfClienteActionPerformed
 
     private void btListarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btListarClienteActionPerformed
@@ -581,7 +693,6 @@ public class Dlg_Menu extends javax.swing.JDialog {
     }//GEN-LAST:event_btCancelarProdutoActionPerformed
 
     private void fieldNomeEstoqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldNomeEstoqueActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_fieldNomeEstoqueActionPerformed
 
     private void btBuscarEstoqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarEstoqueActionPerformed
@@ -610,12 +721,13 @@ public class Dlg_Menu extends javax.swing.JDialog {
             if (produtosFiltrados.isEmpty()) {
                 mostrarMensagem("Nenhum produto encontrado com os critérios de busca.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
                 fieldNomeEstoque.setText("");
+                fieldQtEstoque.setText("0");
             } else if (produtosFiltrados.size() == 1) {
                 Produto produto = produtosFiltrados.get(0);
                 fieldNomeEstoque.setText(produto.getNome());
-                produtoSelecionado = produto; // Armazenar o produto selecionado para uso posterior
+                fieldQtEstoqueAtual.setText(String.valueOf(produto.getEstoque()));
+                produtoSelecionado = produto; 
             } else {
-                // Mais de um produto encontrado, pedir seleção ao usuário
                 Produto[] produtosArray = produtosFiltrados.toArray(Produto[]::new);
                 Produto produtoSelecionado2 = (Produto) JOptionPane.showInputDialog(null,
                         "Vários produtos encontrados. Selecione um:",
@@ -627,7 +739,8 @@ public class Dlg_Menu extends javax.swing.JDialog {
 
                 if (produtoSelecionado2 != null) {
                     fieldNomeEstoque.setText(produtoSelecionado2.getNome());
-                    this.produtoSelecionado = produtoSelecionado2; // Armazenar o produto selecionado para uso posterior
+                    fieldQtEstoqueAtual.setText(String.valueOf(produtoSelecionado2.getEstoque()));
+                    this.produtoSelecionado = produtoSelecionado2;
                 } else {
                     mostrarMensagem("Nenhum produto selecionado.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
                 }
@@ -636,55 +749,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
             Logger.getLogger(Dlg_Menu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private void btCancelarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelarVendaActionPerformed
-        if (vendaTableModel.getRowCount() == 0) {
-            mostrarMensagem("Não há nenhum produto na tabela!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
-            return; 
-        }
-        int confirmar = JOptionPane.showConfirmDialog(null, "Você tem certeza que deseja cancelar a venda? Todos os itens serão removidos.", "Confirmar Cancelamento", JOptionPane.YES_NO_OPTION);
-
-        if (confirmar == JOptionPane.YES_OPTION) {
-            limparCamposVenda();
-            mostrarMensagem("Venda cancelada com sucesso.", "Informação", JOptionPane.INFORMATION_MESSAGE);
-        }
         
-    }//GEN-LAST:event_btCancelarVendaActionPerformed
-
-    private void btFinalizarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFinalizarVendaActionPerformed
-
-        if (vendaTableModel.getRowCount() == 0) {
-            mostrarMensagem("Nenhum item na tabela de venda para finalizar.", "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        
-        Cliente clienteSelecionado2 = selecionarCliente();
-        if (clienteSelecionado2 == null) {
-            mostrarMensagem("Nenhum cliente selecionado.", "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        
-        int confirmar = JOptionPane.showConfirmDialog(this, "Você tem certeza que deseja finalizar a venda?", "Confirmar Finalização", JOptionPane.YES_NO_OPTION);
-        if (confirmar == JOptionPane.YES_OPTION) {
-            double totalVenda = vendaTableModel.calcularTotal();
-            try {
-                Venda venda = GerenciadorDeInterface.getInstance().getDominio().inserirVenda(totalVenda, clienteSelecionado2);
-                for (Item_Venda item : vendaTableModel.getListaItens()) {
-                    Produto produto = item.getProduto();
-                    int novaQuantidade = produto.getEstoque() - item.getQtProduto();
-                    produto.setEstoque(novaQuantidade);
-                    GerenciadorDeInterface.getInstance().getDominio().atualizarProduto(produto);
-                    GerenciadorDeInterface.getInstance().getDominio().adicionarItemVenda(new Item_Venda(produto, venda, item.getQtProduto()));
-                }
-
-                mostrarMensagem("Venda finalizada com sucesso. Total: R$ " + String.format("%.2f", totalVenda), "Informação", JOptionPane.INFORMATION_MESSAGE);
-                limparCamposVenda();
-            } catch (Exception ex) {
-                mostrarErro("Erro ao finalizar a venda: " + ex.getMessage(), ex);
-            }
-        }  
-    }//GEN-LAST:event_btFinalizarVendaActionPerformed
-    
     private Cliente selecionarCliente() {
         List<Cliente> clientes;
         try {
@@ -700,7 +765,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
         }
         
         Set<Cliente> clienteSet = new LinkedHashSet<>(clientes); 
-        JComboBox<Cliente> cbClientes = new JComboBox<>(new DefaultComboBoxModel<>(clienteSet.toArray(new Cliente[0])));
+        JComboBox<Cliente> cbClientes = new JComboBox<>(new DefaultComboBoxModel<>(clienteSet.toArray(Cliente[]::new)));
 
         int result = JOptionPane.showConfirmDialog(this, cbClientes, "Selecionar Cliente", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
@@ -713,45 +778,11 @@ public class Dlg_Menu extends javax.swing.JDialog {
         }
     }
     
-    private void formatTotalVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formatTotalVendaActionPerformed
-    }//GEN-LAST:event_formatTotalVendaActionPerformed
-
     private void fieldQtEstoqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldQtEstoqueActionPerformed
     }//GEN-LAST:event_fieldQtEstoqueActionPerformed
 
     private void formatQtProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formatQtProdutoActionPerformed
     }//GEN-LAST:event_formatQtProdutoActionPerformed
-
-    private void btEditarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditarVendaActionPerformed
-
-        int selectedRow = tableVenda.getSelectedRow();
-        if (selectedRow < 0) {
-            mostrarMensagem("Nenhum item selecionado para editar ou excluir.", "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // Obtém o item selecionado da tabela
-        Item_Venda itemSelecionado = vendaTableModel.getListaItens().get(selectedRow);
-
-        // Exibe um diálogo para selecionar a ação: Alterar ou Excluir
-        String[] options = {"Alterar", "Excluir"};
-        int escolha = JOptionPane.showOptionDialog(
-                this, 
-                "O que você deseja fazer com o item selecionado?", 
-                "Alterar Tabela Venda", 
-                JOptionPane.DEFAULT_OPTION, 
-                JOptionPane.QUESTION_MESSAGE, 
-                null, 
-                options, 
-                options[0] // Opção padrão
-        );
-
-        if (escolha == 0) { // Alterar
-            alterarItemVenda(itemSelecionado);
-        } else if (escolha == 1) { // Excluir
-            excluirItemVenda(itemSelecionado, selectedRow);
-        }
-    }//GEN-LAST:event_btEditarVendaActionPerformed
 
     private void alterarItemVenda(Item_Venda itemSelecionado) {
         String novaQuantidadeStr = JOptionPane.showInputDialog(
@@ -814,6 +845,21 @@ public class Dlg_Menu extends javax.swing.JDialog {
         }
     }
 
+    private void calcularTotalVenda() {        
+        double total = 0.0;
+        if (vendaAtual != null && vendaAtual.getItem_venda() != null) {
+            for (Item_Venda item : vendaAtual.getItem_venda()) {
+                total += item.getProduto().getValor() * item.getQtProduto();
+            }
+        }
+        formatTotalVenda.setText(String.format("%.2f", total));
+    }
+    
+    private void atualizarTabelaItensVenda() {
+        List<Item_Venda> itensVenda = GerenciadorDeInterface.getInstance().getDominio().getItensVendaTemp();
+        vendaTableModel.setLista(itensVenda);
+        vendaTableModel.fireTableDataChanged();
+    }
     
     private void btAdicionarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAdicionarClienteActionPerformed
         
@@ -837,13 +883,25 @@ public class Dlg_Menu extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btAdicionarClienteActionPerformed
 
+    private boolean validarCpfUnico(String cpf) {
+        try {
+            List<Object> cpfExistente = GerenciadorDeInterface.getInstance().getDominio().pesquisarCliente(cpf, 2);
+            if (cpfExistente != null && !cpfExistente.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Cliente com o CPF " + cpf + " já existe.", "ERRO: Adicionar Cliente", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Dlg_Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return true;
+    }
+    
+    private void cbCategoriaProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCategoriaProdutoActionPerformed
+    }//GEN-LAST:event_cbCategoriaProdutoActionPerformed
+
     private void fieldNomeVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldNomeVendaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_fieldNomeVendaActionPerformed
-
-    private void formatQtVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formatQtVendaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_formatQtVendaActionPerformed
 
     private void btBuscarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarProdutoActionPerformed
         buscarProduto();
@@ -899,15 +957,17 @@ public class Dlg_Menu extends javax.swing.JDialog {
         }
     }
     
-    private void btAdicionarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAdicionarVendaActionPerformed
+    private void formatQtVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formatQtVendaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formatQtVendaActionPerformed
 
-        // Inicializa a venda atual se for nula
+    private void btAdicionarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAdicionarVendaActionPerformed
+        
         if (vendaAtual == null) {
             vendaAtual = new Venda();
             vendaAtual.setItem_venda(new ArrayList<>());
         }
 
-        // Busca o produto selecionado
         buscarProduto();
         if (produtoSelecionado == null) {
             mostrarMensagem("Nenhum produto selecionado.", "Aviso", JOptionPane.WARNING_MESSAGE);
@@ -942,41 +1002,162 @@ public class Dlg_Menu extends javax.swing.JDialog {
             return;
         }
 
-        // Atualiza a tabela de itens de venda e o total da venda
         calcularTotalVenda();
         atualizarTabelaItensVenda();
 
-        // Limpa os campos de entrada
         formatQtVenda.setText("0");
         fieldNomeVenda.setText("");
     }//GEN-LAST:event_btAdicionarVendaActionPerformed
 
-    private void calcularTotalVenda() {        
-        double total = 0.0;
-        if (vendaAtual != null && vendaAtual.getItem_venda() != null) {
-            for (Item_Venda item : vendaAtual.getItem_venda()) {
-                total += item.getProduto().getValor() * item.getQtProduto();
+    private void btCancelarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelarVendaActionPerformed
+        if (vendaTableModel.getRowCount() == 0) {
+            mostrarMensagem("Não há nenhum produto na tabela!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        int confirmar = JOptionPane.showConfirmDialog(null, "Você tem certeza que deseja cancelar a venda? Todos os itens serão removidos.", "Confirmar Cancelamento", JOptionPane.YES_NO_OPTION);
+
+        if (confirmar == JOptionPane.YES_OPTION) {
+            limparCamposVenda();
+            mostrarMensagem("Venda cancelada com sucesso.", "Informação", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_btCancelarVendaActionPerformed
+
+    private void btFinalizarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFinalizarVendaActionPerformed
+        if (vendaTableModel.getRowCount() == 0) {
+            mostrarMensagem("Nenhum item na tabela de venda para finalizar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        Cliente clienteSelecionado2 = selecionarCliente();
+        if (clienteSelecionado2 == null) {
+            mostrarMensagem("Nenhum cliente selecionado.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int confirmar = JOptionPane.showConfirmDialog(this, "Você tem certeza que deseja finalizar a venda?", "Confirmar Finalização", JOptionPane.YES_NO_OPTION);
+        if (confirmar == JOptionPane.YES_OPTION) {
+            double totalVenda = vendaTableModel.calcularTotal();
+            try {
+                Venda venda = GerenciadorDeInterface.getInstance().getDominio().inserirVenda(totalVenda, clienteSelecionado2);
+                for (Item_Venda item : vendaTableModel.getListaItens()) {
+                    Produto produto = item.getProduto();
+                    int novaQuantidade = produto.getEstoque() - item.getQtProduto();
+                    produto.setEstoque(novaQuantidade);
+                    GerenciadorDeInterface.getInstance().getDominio().atualizarProduto(produto);
+                    GerenciadorDeInterface.getInstance().getDominio().adicionarItemVenda(new Item_Venda(produto, venda, item.getQtProduto()));
+                }
+
+                mostrarMensagem("Venda finalizada com sucesso. Total: R$ " + String.format("%.2f", totalVenda), "Informação", JOptionPane.INFORMATION_MESSAGE);
+                limparCamposVenda();
+                atualizarTabelaHistoricoVendas();
+            } catch (Exception ex) {
+                mostrarErro("Erro ao finalizar a venda: " + ex.getMessage(), ex);
             }
         }
-        formatTotalVenda.setText(String.format("%.2f", total));
-    }
-    
-    private void atualizarTabelaItensVenda() {
-        List<Item_Venda> itensVenda = GerenciadorDeInterface.getInstance().getDominio().getItensVendaTemp();
-        vendaTableModel.setLista(itensVenda);
-        vendaTableModel.fireTableDataChanged();
-    }
-    
-    private void cbCategoriaProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCategoriaProdutoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbCategoriaProdutoActionPerformed
+    }//GEN-LAST:event_btFinalizarVendaActionPerformed
 
+    private void btEditarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditarVendaActionPerformed
+        
+        int selectedRow = tableVenda.getSelectedRow();
+        if (selectedRow < 0) {
+            mostrarMensagem("Nenhum item selecionado para editar ou excluir.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        Item_Venda itemSelecionado = vendaTableModel.getListaItens().get(selectedRow);
+
+        String[] options = {"Alterar", "Excluir"};
+        int escolha = JOptionPane.showOptionDialog(
+            this,
+            "O que você deseja fazer com o item selecionado?",
+            "Alterar Tabela Venda",
+            JOptionPane.DEFAULT_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            options,
+            options[0] 
+        );
+
+        if (escolha == 0) {
+            alterarItemVenda(itemSelecionado);
+        } else if (escolha == 1) {
+            excluirItemVenda(itemSelecionado, selectedRow);
+        }
+        
+    }//GEN-LAST:event_btEditarVendaActionPerformed
+
+    private void formatTotalVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formatTotalVendaActionPerformed
+    }//GEN-LAST:event_formatTotalVendaActionPerformed
+
+    private void fieldQtEstoqueAtualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldQtEstoqueAtualActionPerformed
+    }//GEN-LAST:event_fieldQtEstoqueAtualActionPerformed
+
+    private void btBuscarHistoricoVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBuscarHistoricoVendaActionPerformed
+
+        String dataBusca = formatHistoricoVenda.getText().trim();
+        if (dataBusca.isEmpty()) {
+            mostrarMensagem("Digite uma data para buscar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        buscarHistoricoVenda(dataBusca);
+        
+    }//GEN-LAST:event_btBuscarHistoricoVendaActionPerformed
+
+    private void buscarHistoricoVenda(String dataBusca) {
+        try {
+            List<Venda> vendasFiltradas = new ArrayList<>();
+
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            sdf.parse(dataBusca);
+
+            List<Venda> vendas = GerenciadorDeInterface.getInstance().getDominio().listar(Venda.class);
+
+            for (Venda venda : vendas) {
+                if (venda.getDataVenda() != null) {
+                    SimpleDateFormat sdfVenda = new SimpleDateFormat("dd/MM/yyyy");
+                    String dataVendaStr = sdfVenda.format(venda.getDataVenda());
+                    if (dataVendaStr.equals(dataBusca)) {
+                        vendasFiltradas.add(venda);
+                    }
+                }
+            }
+
+            if (vendasFiltradas.isEmpty()) {
+                mostrarMensagem("Nenhuma venda encontrada para a data fornecida.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                formatHistoricoVenda.setText("");
+            } else {
+                historicoVendaTableModel.setLista(vendasFiltradas);
+            }
+        } catch (ParseException e) {
+            mostrarMensagem("Digite uma data para buscar.", "Erro", JOptionPane.ERROR_MESSAGE);
+            atualizarTabelaHistoricoVendas();
+        } catch (ClassNotFoundException | SQLException ex) {
+            mostrarErro("Erro ao buscar histórico de vendas: " + ex.getMessage(), ex);
+        }
+        formatHistoricoVenda.setText("");
+    }
+    
+    private void formatHistoricoVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formatHistoricoVendaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formatHistoricoVendaActionPerformed
+    
+    private void atualizarTabelaHistoricoVendas() {
+        try {
+            List<Venda> vendas = GerenciadorDeInterface.getInstance().getDominio().listar(Venda.class);
+            historicoVendaTableModel.setLista(vendas);
+        } catch (ClassNotFoundException | SQLException ex) {
+            mostrarErro("Erro ao carregar histórico de vendas: " + ex.getMessage(), ex);
+        }
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAdicionarCliente;
     private javax.swing.JButton btAdicionarEstoque;
     private javax.swing.JButton btAdicionarProduto;
     private javax.swing.JButton btAdicionarVenda;
     private javax.swing.JButton btBuscarEstoque;
+    private javax.swing.JButton btBuscarHistoricoVenda;
     private javax.swing.JButton btBuscarProduto;
     private javax.swing.JButton btCancelarCliente;
     private javax.swing.JButton btCancelarEstoque;
@@ -994,17 +1175,24 @@ public class Dlg_Menu extends javax.swing.JDialog {
     private javax.swing.JTextField fieldNomeProduto;
     private javax.swing.JTextField fieldNomeVenda;
     private javax.swing.JFormattedTextField fieldQtEstoque;
+    private javax.swing.JFormattedTextField fieldQtEstoqueAtual;
     private javax.swing.JFormattedTextField formatCpfCliente;
+    private javax.swing.JFormattedTextField formatHistoricoVenda;
     private javax.swing.JFormattedTextField formatPrecoProduto;
     private javax.swing.JFormattedTextField formatQtProduto;
     private javax.swing.JFormattedTextField formatQtVenda;
     private javax.swing.JFormattedTextField formatTamProduto;
     private javax.swing.JFormattedTextField formatTelefoneCliente;
     private javax.swing.JFormattedTextField formatTotalVenda;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel labAdicionarEstoque;
     private javax.swing.JLabel labCadastrarProduto;
     private javax.swing.JLabel labCadastroCliente;
     private javax.swing.JLabel labCpfCliente;
+    private javax.swing.JLabel labHistoricoVenda;
+    private javax.swing.JLabel labHistoricoVendas;
     private javax.swing.JLabel labImagemFundo;
     private javax.swing.JLabel labNomeCliente;
     private javax.swing.JLabel labNomeEstoque;
@@ -1012,6 +1200,7 @@ public class Dlg_Menu extends javax.swing.JDialog {
     private javax.swing.JLabel labNomeVenda;
     private javax.swing.JLabel labPrecoProduto;
     private javax.swing.JLabel labQtEstoque;
+    private javax.swing.JLabel labQtEstoqueAtual;
     private javax.swing.JLabel labQtEstoqueProduto;
     private javax.swing.JLabel labQtVenda;
     private javax.swing.JLabel labTamProduto;
@@ -1022,9 +1211,10 @@ public class Dlg_Menu extends javax.swing.JDialog {
     private javax.swing.JPanel panClientes;
     private javax.swing.JPanel panControleEstoque;
     private javax.swing.JTabbedPane panProduto;
-    private javax.swing.JPanel panVenda;
-    private javax.swing.JScrollPane scrolpanCarrinho;
+    private javax.swing.JPanel panVendas;
+    private javax.swing.JScrollPane scrolpanCarrinho1;
     private javax.swing.JTable tableVenda;
+    private javax.swing.JTable tbHistoricoVenda;
     private javax.swing.JTabbedPane tpanMenu;
     // End of variables declaration//GEN-END:variables
     
@@ -1142,24 +1332,8 @@ public class Dlg_Menu extends javax.swing.JDialog {
         formatTotalVenda.setText("0,00");
         vendaAtual = null;
     }
-    
-    /* CLIENTE */
-    
-    private boolean validarCpfUnico(String cpf) {
-        try {
-            List<Object> cpfExistente = GerenciadorDeInterface.getInstance().getDominio().pesquisarCliente(cpf, 2);
-            if (cpfExistente != null && !cpfExistente.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Cliente com o CPF " + cpf + " já existe.", "ERRO: Adicionar Cliente", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(Dlg_Menu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return true;
-    }
-    
-    
-    /* AUXILIARES  */
+      
+    /* MENSAGEM  */
 
     private void mostrarMensagem(String mensagem, String titulo, int tipo) {
         JOptionPane.showMessageDialog(this, mensagem, titulo, tipo);

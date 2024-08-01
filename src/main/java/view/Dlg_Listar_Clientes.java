@@ -18,7 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.table.TableModel;
 import model.Cliente;
-import model.Venda;
 import org.hibernate.HibernateException;
 
 /**

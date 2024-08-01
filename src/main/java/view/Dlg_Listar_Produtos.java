@@ -111,6 +111,7 @@ public class Dlg_Listar_Produtos extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
+        tbListarProduto.setDoubleBuffered(true);
         tbListarProduto.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbListarProduto.setShowHorizontalLines(true);
         scrolConsultarCliente.setViewportView(tbListarProduto);

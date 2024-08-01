@@ -3,7 +3,9 @@ package control;
 import dao.ConexaoHibernate;
 import dao.GenericDAO;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import model.Cliente;
 import model.Item_Venda;
@@ -156,12 +158,18 @@ public class GerenciadorDeDominio {
         Venda venda = new Venda();
         venda.setCliente(cliente);
         venda.setTotalVenda(totalVenda);
+        venda.setDataVenda(new Timestamp(new Date().getTime()));
         genDAO.inserir(venda);
         return venda;
     }
 
-    public List<Object> pesquisarVenda(String pesq) throws SQLException, ClassNotFoundException {
-        return genDAO.listar(Venda.class);
+    public List<Object> pesquisarVenda(String pesq, int tipo) throws SQLException, ClassNotFoundException {
+        switch(tipo){
+            case 0: return genDAO.pesquisar(Venda.class, Restrictions.eq("idVenda", pesq));
+            case 1: return genDAO.pesquisar(Venda.class, Restrictions.eq("idCliente", pesq));    
+            case 2: return genDAO.pesquisar(Venda.class, Restrictions.eq("dataVenda", pesq));
+            default: return null;
+        }
     }
     
     /* ITEM VENDA */
